@@ -1,14 +1,19 @@
 <?php
 
+
 namespace App\PHPLoginManagement\Config;
 
-require __DIR__ . '/conf.php';
+require_once __DIR__ . '/conf.php';
+
 
 class BaseURL
 {
+  private static ?string $baseurl = null;
   public static function get()
   {
-    $config = getConfig();
-    return $config['baseurl'];
+    if (is_null(self::$baseurl)) {
+      self::$baseurl = getConfig()['baseurl'];
+    }
+    return self::$baseurl;
   }
 }

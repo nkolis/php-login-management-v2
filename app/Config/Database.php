@@ -5,7 +5,7 @@ namespace App\PHPLoginManagement\Config;
 use PDO;
 use PDOException;
 
-require __DIR__ . '/conf.php';
+require_once __DIR__ . '/conf.php';
 
 class Database
 {
