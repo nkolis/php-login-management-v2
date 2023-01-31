@@ -1,0 +1,26 @@
+{
+    "name": "setiawan/php-login-management",
+    "type": "project",
+    "authors": [
+        {
+            "name": "nkolis",
+            "email": "nurkholis010@gmail.com"
+        }
+    ],
+    "autoload": {
+      "psr-4": {
+          "App\\PHPLoginManagement\\": "/app"
+      }
+    },
+    "autoload-dev": {
+      "psr-4": {
+          "App\\PHPLoginManagement\\": "/tests"
+      }
+    },
+    "require": {
+      "php": ">=8"
+    },
+    "require-dev": {
+      "phpunit/phpunit": "v9.5.28"
+    }
+}
