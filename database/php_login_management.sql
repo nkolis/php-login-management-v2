@@ -1,8 +1,8 @@
--- MariaDB dump 10.19  Distrib 10.4.27-MariaDB, for Linux (x86_64)
+-- MariaDB dump 10.19  Distrib 10.4.25-MariaDB, for Win64 (AMD64)
 --
 -- Host: localhost    Database: php_login_management_v2
 -- ------------------------------------------------------
--- Server version	10.4.27-MariaDB
+-- Server version	10.4.25-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -27,8 +27,8 @@ CREATE TABLE `sessions` (
   `user_id` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `fk_user_id` (`user_id`),
-  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -48,11 +48,13 @@ DROP TABLE IF EXISTS `users`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `users` (
+  `id` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
-  PRIMARY KEY (`email`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -73,4 +75,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-01-31 22:07:13
+-- Dump completed on 2023-02-01  9:05:13
