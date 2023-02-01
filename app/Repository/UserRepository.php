@@ -19,8 +19,8 @@ class UserRepository
   public function save(User $user): User
   {
     try {
-      $statement = $this->connection->prepare("INSERT INTO users(email, name, password)VALUES(?,?,?)");
-      $statement->execute([$user->email, $user->name, $user->password]);
+      $statement = $this->connection->prepare("INSERT INTO users(user_id, email, name, password)VALUES(?,?,?,?)");
+      $statement->execute([$user->id, $user->email, $user->name, $user->password]);
       return $user;
     } catch (Exception $e) {
       throw $e;
@@ -30,12 +30,12 @@ class UserRepository
   public function findById(string $id): ?User
   {
     try {
-      $statement = $this->connection->prepare("SELECT id, email, name, password FROM users WHERE email = ?");
+      $statement = $this->connection->prepare("SELECT user_id, email, name, password FROM users WHERE email = ?");
       $statement->execute([$id]);
 
       if ($row = $statement->fetch()) {
         $user = new User;
-        $user->id = $row['id'];
+        $user->id = $row['user_id'];
         $user->email = $row['email'];
         $user->name = $row['name'];
         $user->password = $row['password'];
