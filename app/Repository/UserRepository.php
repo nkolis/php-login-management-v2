@@ -27,7 +27,28 @@ class UserRepository
     }
   }
 
-  public function findById(string $id): ?User
+  public function findById(?string $id): ?User
+  {
+    try {
+      $statement = $this->connection->prepare("SELECT user_id, email, name, password FROM users WHERE user_id = ?");
+      $statement->execute([$id]);
+
+      if ($row = $statement->fetch()) {
+        $user = new User;
+        $user->id = $row['user_id'];
+        $user->email = $row['email'];
+        $user->name = $row['name'];
+        $user->password = $row['password'];
+        return $user;
+      } else {
+        return null;
+      }
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  public function findByEmail(?string $id): ?User
   {
     try {
       $statement = $this->connection->prepare("SELECT user_id, email, name, password FROM users WHERE email = ?");
