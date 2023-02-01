@@ -30,11 +30,12 @@ class UserRepository
   public function findById(string $id): ?User
   {
     try {
-      $statement = $this->connection->prepare("SELECT email,name,password FROM users WHERE email = ?");
+      $statement = $this->connection->prepare("SELECT id, email, name, password FROM users WHERE email = ?");
       $statement->execute([$id]);
 
       if ($row = $statement->fetch()) {
         $user = new User;
+        $user->id = $row['id'];
         $user->email = $row['email'];
         $user->name = $row['name'];
         $user->password = $row['password'];

@@ -16,11 +16,14 @@
       "psr-4": {
           "App\\PHPLoginManagement\\": "tests"
       }
+   
     },
     "require": {
-      "php": ">=8"
+      "php": ">=8",
+      "ramsey/uuid": "v4.7.x"
     },
     "require-dev": {
-      "phpunit/phpunit": "v9.5.28"
+      "phpunit/phpunit": "v9.5.28",
+      "ramsey/uuid": "v4.7.x"
     }
 }

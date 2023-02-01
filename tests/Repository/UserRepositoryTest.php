@@ -6,6 +6,9 @@ use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Entity\User;
 use PHPUnit\Framework\TestCase;
 
+use Ramsey\Uuid\Uuid;
+
+
 class UserRepositoryTest extends TestCase
 {
   private UserRepository $userRepository;
@@ -19,6 +22,8 @@ class UserRepositoryTest extends TestCase
   public function testSaveSuccess()
   {
     $user = new User;
+    $uuid = Uuid::uuid4();
+    $user->id = $uuid->toString();
     $user->email = 'kholis@gmail.com';
     $user->name = 'Kholis';
     $user->password = '123';
@@ -36,6 +41,8 @@ class UserRepositoryTest extends TestCase
   {
     $this->expectException(\Exception::class);
     $user = new User;
+    $uuid = Uuid::uuid4();
+    $user->id = $uuid->toString();
     $user->email = 'kholis@gmail.com';
     $user->name = 'Kholis';
     $user->password = '123';
