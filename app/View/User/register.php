@@ -13,21 +13,25 @@ use App\PHPLoginManagement\Config\BaseURL;
     </div>
     <form class="col-sm-8 col-md-6 col-lg-4 mx-auto border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light" action="<?= BaseURL::get() ?>/users/register" method="post">
       <div class="form-floating mb-2 mt-2">
-        <input type="email" class="form-control is-invalid" placeholder="Email" name="email" id="email" autocomplete="off" />
+        <input type="text" class="form-control <?= isset($model['error']['email']) ? 'is-invalid' : '' ?>" placeholder="Email" name="email" id="email" autocomplete="off" value="<?= $_POST['email'] ?? '' ?>" />
         <label for="email">Email</label>
-        <div id="email" class="invalid-feedback">Email cannot empty</div>
+        <?php if (isset($model['error']['email'])) { ?>
+          <div id="email" class="invalid-feedback"><?= $model['error']['email'] ?></div>
+        <?php } ?>
       </div>
       <div class="form-floating mb-2 mt-2">
-        <input type="text" class="form-control is-invalid" placeholder="Name" name="name" id="name" autocomplete="off" />
+        <input type="text" class="form-control <?= isset($model['error']['name']) ? 'is-invalid' : '' ?>" placeholder="Name" name="name" id="name" autocomplete="off" value="<?= $_POST['name'] ?? '' ?>" />
         <label for="name">Name</label>
-        <div id="name" class="invalid-feedback">Name cannot empty</div>
+        <?php if (isset($model['error']['name'])) { ?>
+          <div id="name" class="invalid-feedback"><?= $model['error']['name'] ?></div>
+        <?php } ?>
       </div>
       <div class="form-floating mb-2">
-        <input type="password" class="form-control is-invalid" placeholder="Password" name="password" id="password" />
+        <input type="password" class="form-control <?= isset($model['error']['password']) ? 'is-invalid' : '' ?>" placeholder="Password" name="password" id="password" value="<?= $_POST['password'] ?? '' ?>" />
         <label for="password">Password</label>
-        <div class="invalid-feedback" id="password">
-          Password cannot empty
-        </div>
+        <?php if (isset($model['error']['password'])) { ?>
+          <div id="password" class="invalid-feedback"><?= $model['error']['password'] ?></div>
+        <?php } ?>
       </div>
       <button class="btn btn-primary w-100 p-2" type="submit">Register</button>
     </form>
