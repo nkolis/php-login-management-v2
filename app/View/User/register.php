@@ -3,7 +3,7 @@
 use App\PHPLoginManagement\Config\BaseURL;
 ?>
 <div class="container px-4 py-2">
-  <div class="row d-flex align-items-center g-lg-5 py-5">
+  <div class="row d-flex align-items-center g-lg-5 py-5 mt-4">
     <div class="col-md-6 col-lg-8 d-flex text-lg-start text-center flex-column">
       <h1 class="display-4 fw-bold lh-1">Register</h1>
       <p class="fw-light fs-5">
@@ -27,7 +27,7 @@ use App\PHPLoginManagement\Config\BaseURL;
         <?php } ?>
       </div>
       <div class="form-floating mb-2">
-        <input type="password" class="form-control <?= isset($model['error']['password']) ? 'is-invalid' : '' ?>" placeholder="Password" name="password" id="password" value="<?= $_POST['password'] ?? '' ?>" />
+        <input type="password" class="form-control <?= isset($model['error']['password']) ? 'is-invalid' : '' ?>" placeholder="Password" name="password" id="password" />
         <label for="password">Password</label>
         <?php if (isset($model['error']['password'])) { ?>
           <div id="password" class="invalid-feedback"><?= $model['error']['password'] ?></div>

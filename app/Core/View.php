@@ -16,6 +16,8 @@ class View
   public static function redirect($url)
   {
     header("Location: " . BaseURL::get() . $url);
-    exit;
+    if (getenv('mode') != 'test') {
+      exit;
+    }
   }
 }

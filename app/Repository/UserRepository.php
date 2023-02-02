@@ -45,6 +45,8 @@ class UserRepository
       }
     } catch (Exception $e) {
       throw $e;
+    } finally {
+      $statement->closeCursor();
     }
   }
 
@@ -66,6 +68,8 @@ class UserRepository
       }
     } catch (Exception $e) {
       throw $e;
+    } finally {
+      $statement->closeCursor();
     }
   }
 
