@@ -51,6 +51,7 @@ class UserService
     foreach ($request as $key => $value) {
 
       // validasi jika request kosong
+      $value = trim($value);
       if ($value == null || $value = '') {
         $errors[$key] = ucwords($key) . " can't be empty";
       }
@@ -58,7 +59,7 @@ class UserService
 
     // validasi jika email tidak valid
     if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $request->email)) {
-      $errors[$key] = 'Invalid email';
+      $errors['email'] = 'Invalid email';
     }
 
 
