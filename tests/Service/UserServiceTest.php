@@ -53,7 +53,7 @@ class UserServiceTest extends TestCase
     $this->assertEquals($request->password, $result->password);
   }
 
-  function testRegisterExceptionValidateEmptyOrNull()
+  function testRegisterExceptionValidateEmpty()
   {
 
     $this->expectException(ValidateException::class);
@@ -61,21 +61,11 @@ class UserServiceTest extends TestCase
     $this->expectExceptionMessageMatches("[can't be empty]");
     $this->expectExceptionMessageMatches("[Invalid email]");
 
-    $userNull = new User;
     $userEmpty = $this->user;
-    $userEmpty->id = '';
-    $userEmpty->email = '';
-    $userEmpty->name = '';
-    $userEmpty->password = '';
-
-
-    $requestNull = new UserRegisterRequest;
-    $requestNull->id = $userNull->id;
-    $requestNull->name = $userNull->name;
-    $requestNull->email = $userNull->email;
-    $requestNull->password = $userNull->password;
-
-    $this->userService->register($requestNull);
+    $userEmpty->id = '    ';
+    $userEmpty->email = '   ';
+    $userEmpty->name = ' ';
+    $userEmpty->password = ' ';
 
 
     $requestEmpty = new UserRegisterRequest;
@@ -85,5 +75,22 @@ class UserServiceTest extends TestCase
     $requestEmpty->password = $userEmpty->password;
 
     $this->userService->register($requestEmpty);
+  }
+
+  function testRegisterExceptionValidateNull()
+  {
+
+    $this->expectException(ValidateException::class);
+
+    $this->expectExceptionMessageMatches("[can't be empty]");
+    $this->expectExceptionMessageMatches("[Invalid email]");
+    $userNull = new User;
+    $requestNull = new UserRegisterRequest;
+    $requestNull->id = $userNull->id;
+    $requestNull->name = $userNull->name;
+    $requestNull->email = $userNull->email;
+    $requestNull->password = $userNull->password;
+
+    $this->userService->register($requestNull);
   }
 }
