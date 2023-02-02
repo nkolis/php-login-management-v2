@@ -22,6 +22,7 @@ class UserService
 
   public function register(UserRegisterRequest $request): UserRegisterResponse
   {
+
     $this->validateRegisterRequest($request);
 
     try {
@@ -48,18 +49,18 @@ class UserService
     $errors = [];
 
     foreach ($request as $key => $value) {
+
       // validasi jika request kosong
       if ($value == null || $value = '') {
         $errors[$key] = ucwords($key) . " can't be empty";
       }
-
-      // validasi jika email tidak valid
-      if ($key == 'email') {
-        if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $value)) {
-          $errors[$key] = 'Invalid email';
-        }
-      }
     }
+
+    // validasi jika email tidak valid
+    if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $request->email)) {
+      $errors[$key] = 'Invalid email';
+    }
+
 
     // validasi jika email sudah terdaftar
     $user = $this->userRepository->findByEmail($request->email);
