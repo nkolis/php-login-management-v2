@@ -4,6 +4,7 @@ namespace App\PHPLoginManagement\Service;
 
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Entity\User;
+use App\PHPLoginManagement\Exception\ValidateException;
 use App\PHPLoginManagement\Model\UserRegisterRequest;
 use App\PHPLoginManagement\Model\UserRegisterResponse;
 use App\PHPLoginManagement\Repository\UserRepository;
@@ -39,7 +40,7 @@ class UserServiceTest extends TestCase
     $request = new UserRegisterRequest;
     $request->id = $user->id;
     $request->name = $user->name;
-    $request->email = $user->email;
+    $request->email = "$user->email";
     $request->password = $user->password;
 
     $response = $this->userService->register($request);
@@ -55,9 +56,10 @@ class UserServiceTest extends TestCase
   function testRegisterExceptionValidateEmptyOrNull()
   {
 
-    $this->expectException(Exception::class);
+    $this->expectException(ValidateException::class);
 
-    $this->expectExceptionMessageMatches("[Id can't be empty]");
+    $this->expectExceptionMessageMatches("[can't be empty]");
+    $this->expectExceptionMessageMatches("[Invalid email]");
 
     $userNull = new User;
     $userEmpty = $this->user;
