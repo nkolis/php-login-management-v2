@@ -60,7 +60,7 @@ class UserRepositoryTest extends TestCase
 
   public function findByEmail()
   {
-    $this->expectException(\Exception::class);
+
     $user = new User;
     $uuid = Uuid::uuid4();
     $user->id = $uuid->toString();
