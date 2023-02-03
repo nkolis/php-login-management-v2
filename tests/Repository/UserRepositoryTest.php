@@ -12,10 +12,13 @@ use Ramsey\Uuid\Uuid;
 class UserRepositoryTest extends TestCase
 {
   private UserRepository $userRepository;
+  private SessionRepository $sessionRepository;
 
   public function setUp(): void
   {
     $this->userRepository = new UserRepository(Database::getConnection());
+    $this->sessionRepository =  new SessionRepository(Database::getConnection());
+    $this->sessionRepository->deleteAll();
     $this->userRepository->deleteAll();
   }
 

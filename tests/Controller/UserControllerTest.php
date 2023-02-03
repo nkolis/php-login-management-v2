@@ -5,6 +5,7 @@ namespace App\PHPLoginManagement\Controller;
 use App\PHPLoginManagement\Config\BaseURL;
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Entity\User;
+use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
 use DOMDocument;
 use PHPUnit\Framework\TestCase;
@@ -14,13 +15,16 @@ require __DIR__ . '/../Helper/helper.php';
 class UserControllerTest extends TestCase
 {
   private UserController $userController;
+  private SessionRepository $sessionRepository;
   private UserRepository $userRepository;
   function setUp(): void
   {
     $connection = Database::getConnection();
     $this->userController = new UserController();
     $this->userRepository = new UserRepository($connection);
+    $this->sessionRepository = new SessionRepository($connection);
     putenv("mode=test");
+    $this->sessionRepository->deleteAll();
     $this->userRepository->deleteAll();
   }
 

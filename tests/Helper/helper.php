@@ -6,3 +6,11 @@ namespace App\PHPLoginManagement\Core {
     echo $value;
   }
 }
+
+namespace App\PHPLoginManagement\Service {
+
+  function setcookie($name, $value)
+  {
+    echo "$name, $value";
+  }
+}

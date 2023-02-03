@@ -7,6 +7,7 @@ use App\PHPLoginManagement\Entity\User;
 use App\PHPLoginManagement\Exception\ValidateException;
 use App\PHPLoginManagement\Model\UserRegisterRequest;
 use App\PHPLoginManagement\Model\UserRegisterResponse;
+use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
 use Exception;
 use PHPUnit\Framework\TestCase;
@@ -15,6 +16,7 @@ use Ramsey\Uuid\Uuid;
 class UserServiceTest extends TestCase
 {
   private UserRepository $userRepository;
+  private SessionRepository $sessionRepository;
   private UserService $userService;
   private User $user;
 
@@ -22,6 +24,7 @@ class UserServiceTest extends TestCase
   {
     $connection = Database::getConnection();
     $this->userRepository = new UserRepository($connection);
+    $this->sessionRepository = new SessionRepository($connection);
     $this->userService = new UserService($this->userRepository);
 
     $user = new User;
@@ -31,6 +34,7 @@ class UserServiceTest extends TestCase
     $user->name = 'Nur Kholis';
     $user->password = 'rahasia';
     $this->user = $user;
+    $this->sessionRepository->deleteAll();
     $this->userRepository->deleteAll();
   }
 
@@ -50,7 +54,7 @@ class UserServiceTest extends TestCase
     $this->assertEquals($request->id, $result->id);
     $this->assertEquals($request->email, $result->email);
     $this->assertEquals($request->name, $result->name);
-    $this->assertEquals($request->password, $result->password);
+    $this->assertTrue(password_verify($request->password, $result->password));
   }
 
   function testRegisterExceptionValidateEmpty()
