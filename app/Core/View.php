@@ -17,7 +17,7 @@ class View
   {
     header("Location: " . BaseURL::get() . $url);
     if (getenv('mode') != 'test') {
-      exit;
+      exit();
     }
   }
 }

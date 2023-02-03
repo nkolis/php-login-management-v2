@@ -84,4 +84,26 @@ class UserRepositoryTest extends TestCase
     $user = $this->userRepository->findByEmail('notfound');
     $this->assertNull($user);
   }
+
+  public function testUpdateSuccess()
+  {
+    $user = new User;
+    $uuid = Uuid::uuid4();
+    $user->id = $uuid->toString();
+    $user->email = 'kholis@gmail.com';
+    $user->name = 'Kholis';
+    $user->password = password_verify('123', PASSWORD_BCRYPT);
+
+    $this->userRepository->save($user);
+    $user->email = 'kholis123@gmail.com';
+    $user->name = 'Setiawan';
+    $this->userRepository->update($user);
+
+    $result = $this->userRepository->findById($user->id);
+
+    $this->assertEquals($user->id, $result->id);
+    $this->assertEquals($user->email, $result->email);
+    $this->assertEquals($user->name, $result->name);
+    $this->assertEquals($user->password, $result->password);
+  }
 }

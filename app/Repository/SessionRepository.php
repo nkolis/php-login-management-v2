@@ -51,6 +51,35 @@ class SessionRepository
     }
   }
 
+  public function findByUserId(?string $id): ?Session
+  { {
+      try {
+        $statement = $this->connection->prepare("SELECT session_id,user_id FROM sessions WHERE user_id = ?");
+        $statement->execute([$id]);
+
+        if ($row = $statement->fetch()) {
+          $session = new Session;
+          $session->id = $row['session_id'];
+          $session->user_id = $row['user_id'];
+
+          return $session;
+        } else {
+          return null;
+        }
+      } catch (Exception $e) {
+        throw $e;
+      } finally {
+        $statement->closeCursor();
+      }
+    }
+  }
+
+  public function deleteByid(string $id)
+  {
+    $statement = $this->connection->prepare("DELETE FROM sessions WHERE session_id = ?");
+    $statement->execute([$id]);
+  }
+
   public function deleteAll()
   {
     $this->connection->exec("DELETE FROM sessions");

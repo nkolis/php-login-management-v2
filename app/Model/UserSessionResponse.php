@@ -6,6 +6,8 @@ use App\PHPLoginManagement\Entity\User;
 
 class UserSessionResponse
 {
-  public string $cookie;
+  public string $id;
   public string $user_id;
+  public string $name;
+  public string $email;
 }

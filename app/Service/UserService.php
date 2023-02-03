@@ -7,6 +7,8 @@ use App\PHPLoginManagement\Entity\User;
 use App\PHPLoginManagement\Exception\ValidateException;
 use App\PHPLoginManagement\Model\UserLoginRequest;
 use App\PHPLoginManagement\Model\UserLoginResponse;
+use App\PHPLoginManagement\Model\UserProfileUpdateRequest;
+use App\PHPLoginManagement\Model\UserProfileUpdateResponse;
 use App\PHPLoginManagement\Model\UserRegisterRequest;
 use App\PHPLoginManagement\Model\UserRegisterResponse;
 use App\PHPLoginManagement\Repository\UserRepository;
@@ -46,6 +48,28 @@ class UserService
     }
   }
 
+  public function updateProfile(UserProfileUpdateRequest $request): UserProfileUpdateResponse
+  {
+    $this->validateUpdateRequest($request);
+    try {
+      Database::beginTransaction();
+      $user = new User;
+      $user->id = $request->id;
+      $user->email = $request->email;
+      $user->name = $request->name;
+      $this->userRepository->update($user);
+      Database::commitTransaction();
+      $response = new UserProfileUpdateResponse;
+      $response->user = $user;
+      return $response;
+    } catch (Exception $e) {
+      Database::rollbackTransaction();
+      throw $e;
+    }
+  }
+
+
+
   public function login(UserLoginRequest $request): UserLoginResponse
   {
     $this->validateLoginRequest($request);
@@ -58,6 +82,7 @@ class UserService
       }
 
       if (password_verify($request->password, $user->password)) {
+
         $response = new UserLoginResponse;
         $response->user = $user;
         return $response;
@@ -103,9 +128,7 @@ class UserService
   private function validateLoginRequest(UserLoginRequest $request): void
   {
     $errors = [];
-
     foreach ($request as $key => $value) {
-
       // validasi jika request kosong
       $value = trim($value);
       if ($value == null || $value = '') {
@@ -116,6 +139,36 @@ class UserService
     // validasi jika email tidak valid
     if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $request->email)) {
       $errors['email'] = 'Invalid email';
+    }
+
+    // tangkap error exception
+    if (!empty($errors)) {
+      throw new ValidateException(serialize($errors));
+    }
+  }
+
+  private function validateUpdateRequest(UserProfileUpdateRequest $request): void
+  {
+    $errors = [];
+    foreach ($request as $key => $value) {
+      // validasi jika request kosong
+      $value = trim($value);
+      if ($value == null || $value = '') {
+        $errors[$key] = ucwords($key) . " can't be empty";
+      }
+    }
+
+    // validasi jika email tidak valid
+    if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $request->email)) {
+      $errors['email'] = 'Invalid email';
+    }
+
+
+    // validasi jika email sudah terdaftar
+    $user_email = $this->userRepository->findByEmail($request->email);
+    $user = $this->userRepository->findById($request->id);
+    if ($user_email != null && $user->email != $user_email->email) {
+      $errors['email'] = 'Email already registered';
     }
 
     // tangkap error exception

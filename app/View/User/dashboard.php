@@ -1,11 +1,13 @@
 <?php
 
 use App\PHPLoginManagement\Config\BaseURL;
+
+
 ?>
 <div class="container px-4 py-2">
   <div class="row d-flex align-items-center g-lg-5 py-5 mt-4">
     <div class="col-md-6 col-lg-8 d-flex text-lg-start text-center flex-column">
-      <h1 class="display-4 fw-bold lh-1">Dashboard</h1>
+      <h1 class="display-4 fw-bold lh-1">Halo <?= $model['user']['name'] ?? 'Dashboard' ?>, Selamat datang !</h1>
       <p class="fw-light fs-4">
         Made by <a href="https://www.github.com/nkolis">Kholis</a> with PHP
         Programming Languange :)

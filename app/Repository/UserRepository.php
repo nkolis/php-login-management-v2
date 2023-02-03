@@ -27,6 +27,17 @@ class UserRepository
     }
   }
 
+  public function update(User $user): User
+  {
+    try {
+      $statement = $this->connection->prepare("UPDATE users SET email = ?, name = ? WHERE user_id = ?");
+      $statement->execute([$user->email, $user->name, $user->id]);
+      return $user;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
   public function findById(?string $id): ?User
   {
     try {
@@ -72,6 +83,7 @@ class UserRepository
       $statement->closeCursor();
     }
   }
+
 
   public function deleteAll(): void
   {
