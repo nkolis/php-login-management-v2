@@ -143,7 +143,8 @@ class UserControllerTest extends TestCase
     $this->userController->postRegister();
     $this->userController->postLogin();
     $baseurl = BaseURL::get();
-    $this->expectOutputRegex("[Location: $baseurl/users/dashboard]");
+    $this->expectOutputRegex("[User login]");
+    $this->expectOutputRegex("[Login Success]");
   }
 
   function testDashboard()

@@ -2,6 +2,7 @@
 
 namespace App\PHPLoginManagement\Controller;
 
+use App\PHPLoginManagement\Config\BaseURL;
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Core\View;
 use App\PHPLoginManagement\Exception\ValidateException;
@@ -93,7 +94,14 @@ class UserController
       $sessionRequest->id = (Uuid::uuid4())->toString();
       $sessionRequest->user_id = $response->user->id;
       $this->sessionService->create($sessionRequest);
-      View::redirect('/users/dashboard');
+      View::render('User/login', [
+        'title' => 'Login user',
+        'swal' => json_encode([
+          'icon' => 'success',
+          'title' => 'Login Success',
+          'redirect-url' => BaseURL::get() . '/users/dashboard'
+        ])
+      ]);
     } catch (ValidateException $e) {
 
       View::render('User/login', [

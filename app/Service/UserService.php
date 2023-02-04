@@ -71,7 +71,6 @@ class UserService
 
   public function updatePassword(UserPasswordUpdateRequest $request): UserPasswordUpdateResponse
   {
-
     $this->validateUpdatePasswordRequest($request);
 
     try {
@@ -92,8 +91,6 @@ class UserService
       throw $e;
     }
   }
-
-
 
   public function login(UserLoginRequest $request): UserLoginResponse
   {
