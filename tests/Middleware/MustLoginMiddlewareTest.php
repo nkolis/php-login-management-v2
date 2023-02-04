@@ -59,7 +59,7 @@ namespace App\PHPLoginManagement\Middleware {
       $requesSession->id = $uuid->toString();
       $requesSession->user_id = $user->id;
       $this->sessionService->create($requesSession);
-      $_COOKIE[SessionService::$COOKIE] = $requesSession->user_id;
+      $_COOKIE[SessionService::$COOKIE] = $requesSession->id;
 
       $this->middleware->before();
 

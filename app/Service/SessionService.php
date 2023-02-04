@@ -28,7 +28,7 @@ class SessionService
       $user = $this->userRepository->findById($request->user_id);
 
       if ($user != null && empty($_COOKIE[self::$COOKIE])) {
-        setcookie(self::$COOKIE, $user->id, time() + 60 * 60 * 24 * 30, '/');
+        setcookie(self::$COOKIE, $request->id, time() + 60 * 60 * 24 * 30, '/');
 
         $session = new Session();
         $session->id = $request->id;
@@ -53,10 +53,10 @@ class SessionService
 
   public function currentSession(): ?UserSessionResponse
   {
-    $user_id = $_COOKIE[self::$COOKIE] ?? null;
+    $id = $_COOKIE[self::$COOKIE] ?? null;
 
-    $session = $this->sessionRepository->findByUserId($user_id);
-    $user = $this->userRepository->findById($user_id);
+    $session = $this->sessionRepository->findById($id);
+    $user = $this->userRepository->findById($session->user_id ?? null);
     if ($user != null && $session != null) {
       $response = new UserSessionResponse;
       $response->id = $session->id;
@@ -77,7 +77,7 @@ class SessionService
 
     if ($current != null) {
       setcookie(self::$COOKIE, '', 1, '/');
-      $session = $this->sessionRepository->findByUserId($current->user_id);
+      $session = $this->sessionRepository->findById($current->id);
       $this->sessionRepository->deleteByid($session->id);
     }
   }

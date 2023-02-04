@@ -162,7 +162,7 @@ class UserControllerTest extends TestCase
     $request->user_id = $user->id;
     $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
     $this->userController->dashboard();
     $this->expectOutputRegex("[User dashboard]");
     $this->expectOutputRegex("[Profile]");
@@ -185,7 +185,7 @@ class UserControllerTest extends TestCase
     $request->user_id = $user->id;
     $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
     $this->userController->profile();
     $this->expectOutputRegex("[User profile]");
     $this->expectOutputRegex("[nurkholis@gmail.com]");
@@ -205,7 +205,7 @@ class UserControllerTest extends TestCase
     $request->user_id = $user->id;
     $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
     $_POST['email'] = 'setiawan@gmail.com';
     $_POST['name'] = 'kholis setiawan';
     $this->userController->postUpdateProfile();
@@ -227,7 +227,7 @@ class UserControllerTest extends TestCase
     $request->user_id = $user->id;
     $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
     $_POST['email'] = ' ';
     $_POST['name'] = ' ';
     $this->userController->postUpdateProfile();
@@ -254,7 +254,7 @@ class UserControllerTest extends TestCase
     $request->user_id = $user_id;
     $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
     $_POST['email'] = 'setiawan@gmail.com';
     $_POST['name'] = 'setiawan';
     $this->userController->postUpdateProfile();
@@ -277,7 +277,7 @@ class UserControllerTest extends TestCase
     $request->user_id = $user->id;
     $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
     $this->userController->password();
     $this->expectOutputRegex("[User password]");
     $this->expectOutputRegex("[nurkholis@gmail.com]");
@@ -297,7 +297,7 @@ class UserControllerTest extends TestCase
     $request->user_id = $user->id;
     $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
     $_POST['oldPassword'] = 'rahasia';
     $_POST['newPassword'] = '123';
     $this->userController->postUpdatePassword();
@@ -320,7 +320,7 @@ class UserControllerTest extends TestCase
     $request->user_id = $user->id;
     $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
     $_POST['oldPassword'] = ' ';
     $_POST['newPassword'] = ' ';
     $this->userController->postUpdatePassword();
@@ -343,7 +343,7 @@ class UserControllerTest extends TestCase
     $request->user_id = $user->id;
     $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
     $_POST['oldPassword'] = 'salah';
     $_POST['newPassword'] = '123';
     $this->userController->postUpdatePassword();

@@ -46,14 +46,14 @@ namespace App\PHPLoginManagement\Service {
       $request->user_id = $user->id;
       $this->sessionService->create($request);
 
-      $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+      $_COOKIE[SessionService::$COOKIE] = $request->id;
 
       $result = $this->sessionRepository->findById($request->id);
 
       $this->assertEquals($request->id, $result->id);
       $this->assertEquals($request->user_id, $result->user_id);
 
-      $this->expectOutputRegex("[PLM-SESSION, $request->user_id]");
+      $this->expectOutputRegex("[PLM-SESSION, $request->id]");
     }
 
     function testCreateSessionError()
@@ -81,12 +81,12 @@ namespace App\PHPLoginManagement\Service {
       $request->user_id = $user->id;
       $this->sessionService->create($request);
 
-      $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+      $_COOKIE[SessionService::$COOKIE] = $request->id;
       $session = $this->sessionRepository->findById($request->id);
       $result = $this->sessionService->currentSession();
 
       $this->assertEquals($session->user_id, $result->user_id);
-      $this->expectOutputRegex("[PLM-SESSION, $request->user_id]");
+      $this->expectOutputRegex("[PLM-SESSION, $request->id]");
     }
 
     function testFindCurrentSessionNull()
@@ -112,7 +112,7 @@ namespace App\PHPLoginManagement\Service {
       $request->user_id = $user->id;
       $this->sessionService->create($request);
 
-      $_COOKIE[SessionService::$COOKIE] = $request->user_id;
+      $_COOKIE[SessionService::$COOKIE] = $request->id;
 
       $this->sessionService->destroySession();
 
