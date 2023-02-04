@@ -15,12 +15,15 @@ use App\PHPLoginManagement\Model\UserRegisterRequest;
 use App\PHPLoginManagement\Model\UserRegisterResponse;
 use App\PHPLoginManagement\Repository\UserRepository;
 use Exception;
+use Monolog\Handler\StreamHandler;
+use Monolog\Level;
+use Monolog\Logger;
+use Monolog\Processor\MemoryUsageProcessor;
 
 class UserService
 {
 
   private UserRepository $userRepository;
-
   public function __construct($userRepository)
   {
     $this->userRepository = $userRepository;
@@ -53,6 +56,7 @@ class UserService
   public function updateProfile(UserProfileUpdateRequest $request): UserProfileUpdateResponse
   {
     $this->validateUpdateRequest($request);
+
     try {
       Database::beginTransaction();
       $user = $this->userRepository->findById($request->id);
@@ -95,8 +99,10 @@ class UserService
   public function login(UserLoginRequest $request): UserLoginResponse
   {
     $this->validateLoginRequest($request);
-
+    $logger = new Logger(UserService::class);
+    $logger->pushHandler(new StreamHandler(__DIR__ . '/../../app.log', Level::Info));
     try {
+
       $user = $this->userRepository->findByEmail($request->email);
 
       if ($user == null) {
@@ -105,6 +111,18 @@ class UserService
 
       if (password_verify($request->password, $user->password)) {
 
+        $logger->pushProcessor(new MemoryUsageProcessor());
+        $logger->pushProcessor(function ($record) {
+          $record['extra'] = [
+            'dev' => 'nkolis',
+          ];
+          return $record;
+        });
+        $logger->info('Login success', ['user' => [
+          'email' => $user->email,
+          'name' => $user->name
+        ]]);
+
         $response = new UserLoginResponse;
         $response->user = $user;
         return $response;
@@ -112,6 +130,18 @@ class UserService
         throw new ValidateException(serialize(["error_login" => "Incorrect email or password"]));
       }
     } catch (Exception $e) {
+
+      $logger->pushProcessor(new MemoryUsageProcessor());
+      $logger->pushProcessor(function ($record) {
+        $record['extra'] = [
+          'dev' => 'nkolis',
+        ];
+        return $record;
+      });
+      $logger->warning($e->getMessage(), ['user' => [
+        'email' => $request->email,
+        'password' => $request->password
+      ]]);
       throw $e;
     }
   }
@@ -150,6 +180,7 @@ class UserService
   private function validateLoginRequest(UserLoginRequest $request): void
   {
     $errors = [];
+
     foreach ($request as $key => $value) {
       // validasi jika request kosong
       $value = trim($value);

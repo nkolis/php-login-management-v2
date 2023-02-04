@@ -20,10 +20,13 @@
     },
     "require": {
       "php": ">=8",
-      "ramsey/uuid": "v4.7.x"
+      "ramsey/uuid": "v4.7.x",
+      "monolog/monolog": "v3.2.0"
     },
     "require-dev": {
       "phpunit/phpunit": "v9.5.28",
-      "ramsey/uuid": "v4.7.x"
+      "ramsey/uuid": "v4.7.x",
+      "monolog/monolog": "v3.2.0"
+
     }
 }

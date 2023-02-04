@@ -1,3 +1,4 @@
 vendor
+app.log
 .vscode
 .phpunit.result.cache
