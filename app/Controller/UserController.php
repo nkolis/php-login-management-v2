@@ -173,6 +173,10 @@ class UserController
     } catch (ValidateException $e) {
       View::render('User/password', [
         'title' => 'User password',
+        'user' => [
+          'email' => $current->email,
+          'name' => $current->name,
+        ],
         'error' => unserialize($e->getMessage())
       ]);
     }

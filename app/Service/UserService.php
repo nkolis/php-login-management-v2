@@ -79,7 +79,7 @@ class UserService
 
       if ($user != null) {
         if (password_verify($request->oldPassword, $user->password)) {
-          $user->password = $request->newPassword;
+          $user->password = password_hash($request->newPassword, PASSWORD_BCRYPT);
           $this->userRepository->update($user);
           $response = new UserPasswordUpdateResponse;
           $response->user = $user;

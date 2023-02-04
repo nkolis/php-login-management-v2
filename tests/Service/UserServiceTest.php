@@ -203,7 +203,7 @@ class UserServiceTest extends TestCase
     $updateRequest = new UserPasswordUpdateRequest;
     $updateRequest->user_id = $request->id;
     $updateRequest->oldPassword = 'rahasia';
-    $updateRequest->newPassword = password_hash('123', PASSWORD_BCRYPT);
+    $updateRequest->newPassword = '123';
     $response = $this->userService->updatePassword($updateRequest);
 
     $result = $this->userRepository->findById($updateRequest->user_id);
@@ -237,7 +237,7 @@ class UserServiceTest extends TestCase
     $updateRequest = new UserPasswordUpdateRequest;
     $updateRequest->user_id = $user->id;
     $updateRequest->oldPassword = '123';
-    $updateRequest->newPassword = password_hash('123', PASSWORD_BCRYPT);
+    $updateRequest->newPassword = '123';
     $response = $this->userService->updatePassword($updateRequest);
   }
 }
