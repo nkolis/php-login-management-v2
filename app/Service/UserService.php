@@ -7,6 +7,8 @@ use App\PHPLoginManagement\Entity\User;
 use App\PHPLoginManagement\Exception\ValidateException;
 use App\PHPLoginManagement\Model\UserLoginRequest;
 use App\PHPLoginManagement\Model\UserLoginResponse;
+use App\PHPLoginManagement\Model\UserPasswordUpdateRequest;
+use App\PHPLoginManagement\Model\UserPasswordUpdateResponse;
 use App\PHPLoginManagement\Model\UserProfileUpdateRequest;
 use App\PHPLoginManagement\Model\UserProfileUpdateResponse;
 use App\PHPLoginManagement\Model\UserRegisterRequest;
@@ -53,8 +55,7 @@ class UserService
     $this->validateUpdateRequest($request);
     try {
       Database::beginTransaction();
-      $user = new User;
-      $user->id = $request->id;
+      $user = $this->userRepository->findById($request->id);
       $user->email = $request->email;
       $user->name = $request->name;
       $this->userRepository->update($user);
@@ -64,6 +65,30 @@ class UserService
       return $response;
     } catch (Exception $e) {
       Database::rollbackTransaction();
+      throw $e;
+    }
+  }
+
+  public function updatePassword(UserPasswordUpdateRequest $request): UserPasswordUpdateResponse
+  {
+
+    $this->validateUpdatePasswordRequest($request);
+
+    try {
+      $user = $this->userRepository->findById($request->user_id);
+
+      if ($user != null) {
+        if (password_verify($request->oldPassword, $user->password)) {
+          $user->password = $request->newPassword;
+          $this->userRepository->update($user);
+          $response = new UserPasswordUpdateResponse;
+          $response->user = $user;
+          return $response;
+        } else {
+          throw new ValidateException(serialize(['oldPassword' => 'Old password is wrong']));
+        }
+      }
+    } catch (\Exception $e) {
       throw $e;
     }
   }
@@ -169,6 +194,24 @@ class UserService
     $user = $this->userRepository->findById($request->id);
     if ($user_email != null && $user->email != $user_email->email) {
       $errors['email'] = 'Email already registered';
+    }
+
+    // tangkap error exception
+    if (!empty($errors)) {
+      throw new ValidateException(serialize($errors));
+    }
+  }
+
+  private function validateUpdatePasswordRequest(UserPasswordUpdateRequest $request): void
+  {
+    $errors = [];
+
+    if (trim($request->oldPassword) == '' || $request->oldPassword == null) {
+      $errors['oldPassword'] = "Old password can't be empty";
+    }
+
+    if (trim($request->newPassword) == '' || $request->newPassword == null) {
+      $errors['newPassword'] = "New password can't be empty";
     }
 
     // tangkap error exception

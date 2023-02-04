@@ -5,6 +5,8 @@ namespace App\PHPLoginManagement\Service;
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Entity\User;
 use App\PHPLoginManagement\Exception\ValidateException;
+use App\PHPLoginManagement\Model\UserPasswordUpdateRequest;
+use App\PHPLoginManagement\Model\UserPasswordUpdateResponse;
 use App\PHPLoginManagement\Model\UserProfileUpdateRequest;
 use App\PHPLoginManagement\Model\UserProfileUpdateResponse;
 use App\PHPLoginManagement\Model\UserRegisterRequest;
@@ -56,7 +58,7 @@ class UserServiceTest extends TestCase
     $this->assertEquals($request->id, $result->id);
     $this->assertEquals($request->email, $result->email);
     $this->assertEquals($request->name, $result->name);
-    $this->assertTrue(password_verify($request->password, $result->password));
+    $this->assertTrue(password_verify('rahasia', $result->password));
   }
 
   function testRegisterExceptionEmailAlreadyRegistered()
@@ -140,6 +142,7 @@ class UserServiceTest extends TestCase
     $this->assertEquals($updateRequest->id, $result->id);
     $this->assertEquals($updateRequest->email, $result->email);
     $this->assertEquals($updateRequest->name, $result->name);
+    $this->assertTrue(password_verify('rahasia', $result->password));
   }
 
   function testUpdateExceptionValidateEmpty()
@@ -185,5 +188,56 @@ class UserServiceTest extends TestCase
     $updateRequest->id = $user->id;
     $updateRequest->name = 'kholis';
     $this->userService->updateProfile($updateRequest);
+  }
+
+  function testUpdatePasswordSuccess()
+  {
+    $user = $this->user;
+    $request = new UserRegisterRequest;
+    $request->id = $user->id;
+    $request->name = $user->name;
+    $request->email = $user->email;
+    $request->password = $user->password;
+
+    $this->userService->register($request);
+    $updateRequest = new UserPasswordUpdateRequest;
+    $updateRequest->user_id = $request->id;
+    $updateRequest->oldPassword = 'rahasia';
+    $updateRequest->newPassword = password_hash('123', PASSWORD_BCRYPT);
+    $response = $this->userService->updatePassword($updateRequest);
+
+    $result = $this->userRepository->findById($updateRequest->user_id);
+    $this->assertEquals($response::class, UserPasswordUpdateResponse::class);
+    $this->assertEquals($updateRequest->user_id, $result->id);
+    $this->assertTrue(password_verify('123', $result->password));
+  }
+
+  function testUpdatePasswordValidationEmpty()
+  {
+    $this->expectExceptionMessageMatches("[Old password can't be empty]");
+    $this->expectExceptionMessageMatches("[New password can't be empty]");
+
+    $updateRequest = new UserPasswordUpdateRequest;
+    $updateRequest->oldPassword = ' ';
+    $updateRequest->newPassword = ' ';
+    $response = $this->userService->updatePassword($updateRequest);
+  }
+
+  function testUpdatePasswordWrongOldPassword()
+  {
+    $this->expectExceptionMessage('Old password is wrong');
+    $user = $this->user;
+    $request = new UserRegisterRequest;
+    $request->id = $user->id;
+    $request->name = $user->name;
+    $request->email = $user->email;
+    $request->password = $user->password;
+
+    $this->userService->register($request);
+    $updateRequest = new UserPasswordUpdateRequest;
+    $updateRequest->user_id = $user->id;
+    $updateRequest->oldPassword = '123';
+    $updateRequest->newPassword = password_hash('123', PASSWORD_BCRYPT);
+    $response = $this->userService->updatePassword($updateRequest);
   }
 }

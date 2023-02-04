@@ -65,6 +65,7 @@ class SessionService
       $response->name = $user->name;
       return $response;
     } else {
+      setcookie(Self::$COOKIE, '', 1, '/');
       return null;
     }
   }

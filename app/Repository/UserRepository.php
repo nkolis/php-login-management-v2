@@ -29,9 +29,10 @@ class UserRepository
 
   public function update(User $user): User
   {
+
     try {
-      $statement = $this->connection->prepare("UPDATE users SET email = ?, name = ? WHERE user_id = ?");
-      $statement->execute([$user->email, $user->name, $user->id]);
+      $statement = $this->connection->prepare("UPDATE users SET email = ?, name = ?, password = ? WHERE user_id = ?");
+      $statement->execute([$user->email, $user->name, $user->password, $user->id]);
       return $user;
     } catch (Exception $e) {
       throw $e;

@@ -24,6 +24,10 @@ Router::add(method: 'POST', path: '/users/login', controller: UserController::cl
 Router::add(method: 'GET', path: '/users/profile', controller: UserController::class, function: 'profile', middleware: [MustLoginMiddleware::class]);
 Router::add(method: 'POST', path: '/users/profile', controller: UserController::class, function: 'postUpdateProfile', middleware: [MustLoginMiddleware::class]);
 
+// User Password
+Router::add(method: 'GET', path: '/users/password', controller: UserController::class, function: 'password', middleware: [MustLoginMiddleware::class]);
+Router::add(method: 'POST', path: '/users/password', controller: UserController::class, function: 'postUpdatePassword', middleware: [MustLoginMiddleware::class]);
+
 // User logout
 Router::add(method: 'GET', path: '/users/logout', controller: UserController::class, function: 'logout', middleware: [MustLoginMiddleware::class]);
 

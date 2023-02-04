@@ -6,6 +6,7 @@ use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Core\View;
 use App\PHPLoginManagement\Exception\ValidateException;
 use App\PHPLoginManagement\Model\UserLoginRequest;
+use App\PHPLoginManagement\Model\UserPasswordUpdateRequest;
 use App\PHPLoginManagement\Model\UserProfileUpdateRequest;
 use App\PHPLoginManagement\Model\UserRegisterRequest;
 use App\PHPLoginManagement\Model\UserSessionRequest;
@@ -141,5 +142,39 @@ class UserController
   {
     $this->sessionService->destroySession();
     View::redirect('/');
+  }
+
+  public function password()
+  {
+    $current = $this->sessionService->currentSession();
+    View::render('User/password', [
+      'title' => 'User password',
+      'user' => [
+        'id' => $current->user_id,
+        'email' => $current->email,
+        'name' => $current->name,
+      ]
+    ]);
+  }
+
+  public function postUpdatePassword()
+  {
+    try {
+      $request = new UserPasswordUpdateRequest;
+      $current = $this->sessionService->currentSession();
+
+      $request->user_id = $current->user_id;
+      $request->oldPassword = $_POST['oldPassword'];
+      $request->newPassword = $_POST['newPassword'];
+
+      $this->userService->updatePassword($request);
+
+      View::redirect('/users/dashboard');
+    } catch (ValidateException $e) {
+      View::render('User/password', [
+        'title' => 'User password',
+        'error' => unserialize($e->getMessage())
+      ]);
+    }
   }
 }
