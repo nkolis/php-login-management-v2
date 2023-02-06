@@ -26,7 +26,11 @@ class SessionService
 
     try {
       $user = $this->userRepository->findById($request->user_id);
+      $session = $this->sessionRepository->findByUserId($request->user_id);
 
+      if ($session != null) {
+        $this->sessionRepository->deleteByid($session->id);
+      }
       if ($user != null && empty($_COOKIE[self::$COOKIE])) {
         setcookie(self::$COOKIE, $request->id, time() + 60 * 60 * 24 * 30, '/');
 
