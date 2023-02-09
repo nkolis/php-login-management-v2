@@ -18,8 +18,9 @@ class VerificationUserRepository
   public function save(VerificationUser $verication): VerificationUser
   {
     try {
-      $statement = $this->connection->prepare("INSERT INTO verfication_users(user_id, code)VALUES(?,?)");
+      $statement = $this->connection->prepare("INSERT INTO verification_users(user_id, code)VALUES(?,?)");
       $statement->execute([$verication->user_id, $verication->code]);
+      $verication->id = $this->connection->lastInsertId();
       return $verication;
     } catch (Exception $e) {
       throw $e;
@@ -29,7 +30,7 @@ class VerificationUserRepository
   public function findById(?string $id): ?VerificationUser
   {
     try {
-      $statement = $this->connection->prepare("SELECT id, user_id, code, created_at, updated_at FROM verificaton_users WHERE id = ?");
+      $statement = $this->connection->prepare("SELECT id, user_id, code, created_at, updated_at FROM verification_users WHERE id = ?");
       $statement->execute([$id]);
 
       if ($row = $statement->fetch()) {
@@ -38,7 +39,7 @@ class VerificationUserRepository
         $verification->user_id = $row['user_id'];
         $verification->code = $row['code'];
         $verification->created_at = $row['created_at'];
-        $verification->updated_at = $row['update_at'];
+        $verification->updated_at = $row['updated_at'];
         return $verification;
       } else {
         return null;
@@ -48,5 +49,10 @@ class VerificationUserRepository
     } finally {
       $statement->closeCursor();
     }
+  }
+
+  public function deleteAll(): void
+  {
+    $this->connection->exec("DELETE FROM verification_users");
   }
 }

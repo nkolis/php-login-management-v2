@@ -38,6 +38,7 @@ class UserRepositoryTest extends TestCase
     $this->assertEquals($user->id, $result->id);
     $this->assertEquals($user->email, $result->email);
     $this->assertEquals($user->name, $result->name);
+    $this->assertEquals('unverified', $result->verification_status);
     $this->assertEquals($user->password, $result->password);
   }
 
@@ -97,6 +98,7 @@ class UserRepositoryTest extends TestCase
     $this->userRepository->save($user);
     $user->email = 'kholis123@gmail.com';
     $user->name = 'Setiawan';
+    $user->verification_status = 'verified';
     $this->userRepository->update($user);
 
     $result = $this->userRepository->findById($user->id);
@@ -104,6 +106,7 @@ class UserRepositoryTest extends TestCase
     $this->assertEquals($user->id, $result->id);
     $this->assertEquals($user->email, $result->email);
     $this->assertEquals($user->name, $result->name);
+    $this->assertEquals('verified', $result->verification_status);
     $this->assertTrue(password_verify('123', $result->password));
   }
 

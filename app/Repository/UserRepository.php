@@ -31,8 +31,8 @@ class UserRepository
   {
 
     try {
-      $statement = $this->connection->prepare("UPDATE users SET email = ?, name = ?, password = ? WHERE user_id = ?");
-      $statement->execute([$user->email, $user->name, $user->password, $user->id]);
+      $statement = $this->connection->prepare("UPDATE users SET email = ?, name = ?, verification_status = ?, password = ? WHERE user_id = ?");
+      $statement->execute([$user->email, $user->name, $user->verification_status, $user->password,  $user->id]);
       return $user;
     } catch (Exception $e) {
       throw $e;
@@ -42,7 +42,7 @@ class UserRepository
   public function findById(?string $id): ?User
   {
     try {
-      $statement = $this->connection->prepare("SELECT user_id, email, name, password FROM users WHERE user_id = ?");
+      $statement = $this->connection->prepare("SELECT user_id, email, name, verification_status, password FROM users WHERE user_id = ?");
       $statement->execute([$id]);
 
       if ($row = $statement->fetch()) {
@@ -50,6 +50,7 @@ class UserRepository
         $user->id = $row['user_id'];
         $user->email = $row['email'];
         $user->name = $row['name'];
+        $user->verification_status = $row['verification_status'];
         $user->password = $row['password'];
         return $user;
       } else {
@@ -65,7 +66,7 @@ class UserRepository
   public function findByEmail(?string $id): ?User
   {
     try {
-      $statement = $this->connection->prepare("SELECT user_id, email, name, password FROM users WHERE email = ?");
+      $statement = $this->connection->prepare("SELECT user_id, email, name, verification_status, password FROM users WHERE email = ?");
       $statement->execute([$id]);
 
       if ($row = $statement->fetch()) {
@@ -73,6 +74,7 @@ class UserRepository
         $user->id = $row['user_id'];
         $user->email = $row['email'];
         $user->name = $row['name'];
+        $user->verification_status = $row['verification_status'];
         $user->password = $row['password'];
         return $user;
       } else {

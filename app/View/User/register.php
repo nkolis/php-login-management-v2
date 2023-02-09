@@ -33,7 +33,8 @@ use App\PHPLoginManagement\Config\BaseURL;
           <div id="password" class="invalid-feedback"><?= $model['error']['password'] ?></div>
         <?php } ?>
       </div>
-      <button class="btn btn-primary w-100 p-2" type="submit">Register</button>
+      <button class="btn btn-primary w-100 p-2 mb-2" type="submit">Register</button>
+      <span>Sudah punya akun? </span> <a href="<?= BaseURL::get() ?>/users/login">Login</a>
     </form>
   </div>
 </div>
