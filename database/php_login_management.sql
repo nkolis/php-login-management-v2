@@ -1,6 +1,6 @@
 -- MariaDB dump 10.19  Distrib 10.4.27-MariaDB, for Linux (x86_64)
 --
--- Host: localhost    Database: php_login_management_v2
+-- Host: localhost    Database: php_login_management_v2_test
 -- ------------------------------------------------------
 -- Server version	10.4.27-MariaDB
 
@@ -30,7 +30,7 @@ CREATE TABLE `sessions` (
   UNIQUE KEY `session_id` (`session_id`),
   KEY `fk_user_id` (`user_id`),
   CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=947 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -54,11 +54,12 @@ CREATE TABLE `users` (
   `user_id` char(36) NOT NULL,
   `email` varchar(255) NOT NULL,
   `name` varchar(255) NOT NULL,
+  `verification_status` enum('verified','unverified') NOT NULL DEFAULT 'unverified',
   `password` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `email` (`email`),
   UNIQUE KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=1950 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -67,7 +68,36 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1949,'39fdb51f-d38b-4a0d-8c37-21d3ff4cda9a','nurkholis@gmail.com','Nur Kholis','verified','$2y$10$XIid6ER7f.0rcp4N1pGeZ.OJPgAVVOGu8m1rw1yZTnV/aI.uvoexK');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `verification_users`
+--
+
+DROP TABLE IF EXISTS `verification_users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `verification_users` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `user_id` char(36) NOT NULL,
+  `code` varchar(10) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `user_id` (`user_id`),
+  CONSTRAINT `fk_user_id_verification` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `verification_users`
+--
+
+LOCK TABLES `verification_users` WRITE;
+/*!40000 ALTER TABLE `verification_users` DISABLE KEYS */;
+/*!40000 ALTER TABLE `verification_users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -79,4 +109,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-02-01 18:37:13
+-- Dump completed on 2023-02-09 11:21:32
