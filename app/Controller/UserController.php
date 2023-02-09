@@ -40,7 +40,8 @@ class UserController
     View::render('User/dashboard', [
       'title' => 'User dashboard',
       'user' => [
-        'name' => $current->name ?? ''
+        'name' => $current->name ?? '',
+        'verification_status' => $current->verification_status ?? ''
       ]
     ]);
   }
@@ -58,9 +59,9 @@ class UserController
       $request = new UserRegisterRequest;
       $uuid = Uuid::uuid4();
       $request->id = $uuid;
-      $request->email = $_POST['email'];
-      $request->name = $_POST['name'];
-      $request->password = $_POST['password'];
+      $request->email = strip_tags($_POST['email']);
+      $request->name = strip_tags($_POST['name']);
+      $request->password = strip_tags($_POST['password']);
       $this->userService->register($request);
 
       View::redirect('/users/login');
@@ -84,10 +85,8 @@ class UserController
   {
     try {
       $requestUserLogin = new UserLoginRequest;
-
-      $requestUserLogin->email = $_POST['email'];
-
-      $requestUserLogin->password = $_POST['password'];
+      $requestUserLogin->email = strip_tags($_POST['email']);
+      $requestUserLogin->password = strip_tags($_POST['password']);
 
       $response = $this->userService->login($requestUserLogin);
       $sessionRequest = new UserSessionRequest;
@@ -131,8 +130,9 @@ class UserController
       $current = $this->sessionService->currentSession();
 
       $request->id = $current->user_id;
-      $request->email = $_POST['email'];
-      $request->name = $_POST['name'];
+
+      $request->email = strip_tags($_POST['email']);
+      $request->name = strip_tags($_POST['name']);
 
       $this->userService->updateProfile($request);
 
@@ -172,8 +172,8 @@ class UserController
       $current = $this->sessionService->currentSession();
 
       $request->user_id = $current->user_id;
-      $request->oldPassword = $_POST['oldPassword'];
-      $request->newPassword = $_POST['newPassword'];
+      $request->oldPassword = strip_tags($_POST['oldPassword']);
+      $request->newPassword = strip_tags($_POST['newPassword']);
 
       $this->userService->updatePassword($request);
 

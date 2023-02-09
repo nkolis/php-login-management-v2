@@ -33,12 +33,9 @@ class SessionService
       }
       if ($user != null && empty($_COOKIE[self::$COOKIE])) {
         setcookie(self::$COOKIE, $request->id, time() + 60 * 60 * 24 * 30, '/');
-
         $session = new Session();
         $session->id = $request->id;
         $session->user_id = $request->user_id;
-
-
         $this->sessionRepository->save($session);
 
         $response = new UserSessionResponse;
@@ -46,6 +43,7 @@ class SessionService
         $response->user_id = $user->id;
         $response->email = $user->email;
         $response->name = $user->name;
+        $response->verification_status = $user->verification_status;
         return $response;
       } else {
         throw new Exception('Failed create session user not found');
@@ -57,9 +55,8 @@ class SessionService
 
   public function currentSession(): ?UserSessionResponse
   {
-    $id = $_COOKIE[self::$COOKIE] ?? null;
-
-    $session = $this->sessionRepository->findById($id);
+    $session_id = $_COOKIE[self::$COOKIE] ?? null;
+    $session = $this->sessionRepository->findById($session_id);
     $user = $this->userRepository->findById($session->user_id ?? null);
     if ($user != null && $session != null) {
       $response = new UserSessionResponse;
@@ -67,6 +64,7 @@ class SessionService
       $response->user_id = $user->id;
       $response->email = $user->email;
       $response->name = $user->name;
+      $response->verification_status = $user->verification_status;
       return $response;
     } else {
       setcookie(Self::$COOKIE, '', 1, '/');
@@ -76,13 +74,10 @@ class SessionService
 
   public function destroySession(): void
   {
-
     $current = $this->currentSession();
-
     if ($current != null) {
       setcookie(self::$COOKIE, '', 1, '/');
-      $session = $this->sessionRepository->findById($current->id);
-      $this->sessionRepository->deleteByid($session->id);
+      $this->sessionRepository->deleteByid($current->id);
     }
   }
 }

@@ -105,11 +105,7 @@ class UserService
 
       $user = $this->userRepository->findByEmail($request->email);
 
-      if ($user == null) {
-        throw new ValidateException(serialize(["error_login" => "Incorrect email or password"]));
-      }
-
-      if (password_verify($request->password, $user->password)) {
+      if (password_verify($request->password, $user->password ?? null)) {
 
         $logger->pushProcessor(new MemoryUsageProcessor());
         $logger->pushProcessor(function ($record) {
