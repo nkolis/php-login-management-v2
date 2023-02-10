@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set("Asia/Jakarta");
 require __DIR__ . '/../vendor/autoload.php';
 
 use App\PHPLoginManagement\Controller\HomeController;

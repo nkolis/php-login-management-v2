@@ -14,11 +14,16 @@ class SessionService
   private UserRepository $userRepository;
   private SessionRepository $sessionRepository;
   public static $COOKIE = "PLM-SESSION";
+  public static array $CLIENT;
 
   public function __construct($userRepository, $sessionRepository)
   {
     $this->userRepository = $userRepository;
     $this->sessionRepository = $sessionRepository;
+    self::$CLIENT = [
+      'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
+      'ip_addr' => $_SERVER['REMOTE_ADDR'] ?? null,
+    ];
   }
 
   public function create(UserSessionRequest $request): ?UserSessionResponse
@@ -28,14 +33,19 @@ class SessionService
       $user = $this->userRepository->findById($request->user_id);
       $session = $this->sessionRepository->findByUserId($request->user_id);
 
-      if ($session != null) {
+      if ($session != null && $session->user_agent == self::$CLIENT['user_agent'] && $session->ip_addr == self::$CLIENT['ip_addr']) {
         $this->sessionRepository->deleteByid($session->id);
       }
+
       if ($user != null && empty($_COOKIE[self::$COOKIE])) {
-        setcookie(self::$COOKIE, $request->id, time() + 60 * 60 * 24 * 30, '/');
+        $expire = time() + 60 * 60 * 24 * 7;
+        setcookie(self::$COOKIE, $request->id, $expire, '/');
         $session = new Session();
         $session->id = $request->id;
         $session->user_id = $request->user_id;
+        $session->user_agent = self::$CLIENT['user_agent'];
+        $session->ip_addr = self::$CLIENT['ip_addr'];
+        $session->expires = date('Y-m-d H:i:s', $expire);
         $this->sessionRepository->save($session);
 
         $response = new UserSessionResponse;
@@ -55,10 +65,12 @@ class SessionService
 
   public function currentSession(): ?UserSessionResponse
   {
+
     $session_id = $_COOKIE[self::$COOKIE] ?? null;
     $session = $this->sessionRepository->findById($session_id);
+    $this->sessionRepository->deleteExpireSessionByUserId(date('Y-m-d H:i:s', time()), $session->user_id ?? null);
     $user = $this->userRepository->findById($session->user_id ?? null);
-    if ($user != null && $session != null) {
+    if ($user != null && $session != null && $session->user_agent == self::$CLIENT['user_agent'] && $session->ip_addr == self::$CLIENT['ip_addr']) {
       $response = new UserSessionResponse;
       $response->id = $session->id;
       $response->user_id = $user->id;

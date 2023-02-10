@@ -20,8 +20,8 @@ class SessionRepository
   public function save(Session $session): Session
   {
     try {
-      $statement = $this->connection->prepare("INSERT INTO sessions (session_id, user_id)VALUES(?,?)");
-      $statement->execute([$session->id, $session->user_id]);
+      $statement = $this->connection->prepare("INSERT INTO sessions (session_id, user_id, user_agent, ip_addr, expires)VALUES(?,?,?,?,?)");
+      $statement->execute([$session->id, $session->user_id, $session->user_agent, $session->ip_addr, $session->expires]);
       return $session;
     } catch (Exception $e) {
       throw $e;
@@ -31,13 +31,16 @@ class SessionRepository
   public function findById(?string $id): ?Session
   { {
       try {
-        $statement = $this->connection->prepare("SELECT session_id,user_id FROM sessions WHERE session_id = ?");
+        $statement = $this->connection->prepare("SELECT session_id, user_id, user_agent, ip_addr, expires FROM sessions WHERE session_id = ?");
         $statement->execute([$id]);
 
         if ($row = $statement->fetch()) {
           $session = new Session;
           $session->id = $row['session_id'];
           $session->user_id = $row['user_id'];
+          $session->user_agent = $row['user_agent'];
+          $session->ip_addr = $row['ip_addr'];
+          $session->expires = $row['expires'];
 
           return $session;
         } else {
@@ -52,25 +55,28 @@ class SessionRepository
   }
 
   public function findByUserId(?string $id): ?Session
-  { {
-      try {
-        $statement = $this->connection->prepare("SELECT session_id,user_id FROM sessions WHERE user_id = ?");
-        $statement->execute([$id]);
+  {
+    try {
+      $statement = $this->connection->prepare("SELECT session_id,user_id,user_agent, ip_addr, expires FROM sessions WHERE user_id = ?");
+      $statement->execute([$id]);
 
-        if ($row = $statement->fetch()) {
-          $session = new Session;
-          $session->id = $row['session_id'];
-          $session->user_id = $row['user_id'];
+      if ($row = $statement->fetch()) {
+        $session = new Session;
+        $session->id = $row['session_id'];
+        $session->user_id = $row['user_id'];
+        $session->user_agent = $row['user_agent'];
+        $session->ip_addr = $row['ip_addr'];
+        $session->expires = $row['expires'];
 
-          return $session;
-        } else {
-          return null;
-        }
-      } catch (Exception $e) {
-        throw $e;
-      } finally {
-        $statement->closeCursor();
+
+        return $session;
+      } else {
+        return null;
       }
+    } catch (Exception $e) {
+      throw $e;
+    } finally {
+      $statement->closeCursor();
     }
   }
 
@@ -78,6 +84,12 @@ class SessionRepository
   {
     $statement = $this->connection->prepare("DELETE FROM sessions WHERE session_id = ?");
     $statement->execute([$id]);
+  }
+
+  public function deleteExpireSessionByUserId(string $datenow, ?string $user_id)
+  {
+    $statement = $this->connection->prepare("DELETE FROM sessions WHERE user_id = ? AND expires < ?");
+    $statement->execute([$user_id, $datenow]);
   }
 
   public function deleteAll()

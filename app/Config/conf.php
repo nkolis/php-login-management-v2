@@ -2,7 +2,7 @@
 function getConfig()
 {
   return [
-    'baseurl' => 'http://localhost/php-login-management-v2/public',
+    'baseurl' => 'http://192.168.43.67/php-login-management-v2/public',
     'database' => [
       'test' => [
         'username' => 'root',
