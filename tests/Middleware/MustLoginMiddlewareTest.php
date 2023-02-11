@@ -33,6 +33,8 @@ namespace App\PHPLoginManagement\Middleware {
       $this->userRepository->deleteAll();
       $_COOKIE[SessionService::$COOKIE] = '';
       putenv("mode=test");
+      $_SERVER['HTTP_USER_AGENT'] = 'mozilla';
+      $_SERVER['REMOTE_ADDR'] = getenv("REMOTE_ADDR");
     }
 
     function testMustLoginGuest()

@@ -104,31 +104,31 @@ class SessionRepositoryTest extends TestCase
     $this->assertEquals($session->ip_addr, $result->ip_addr);
   }
 
-  function testFindByUserIdResultsMoreThanOne()
-  {
-    $user = new User;
-    $uuid = Uuid::uuid4();
-    $user->id = $uuid->toString();
-    $user->email = 'eren@gmail.com';
-    $user->name = 'Eren Yaiger';
-    $user->password = password_hash('eren123', PASSWORD_BCRYPT);
-    $this->userRepository->save($user);
+  // function testFindByUserIdResultsMoreThanOne()
+  // {
+  //   $user = new User;
+  //   $uuid = Uuid::uuid4();
+  //   $user->id = $uuid->toString();
+  //   $user->email = 'eren@gmail.com';
+  //   $user->name = 'Eren Yaiger';
+  //   $user->password = password_hash('eren123', PASSWORD_BCRYPT);
+  //   $this->userRepository->save($user);
 
-    $session = new Session;
-    $uuid = Uuid::uuid4();
-    $session->id = $uuid->toString();
-    $session->user_id = $user->id;
-    $session->user_agent = 'Mozilla';
-    $session->ip_addr = getenv("REMOTE_ADDR");
-    $this->sessionRepository->save($session);
-    $uuid = Uuid::uuid4();
-    $session->id = $uuid->toString();
-    $session->user_id = $user->id;
-    $session->user_agent = 'Chrome';
-    $session->ip_addr = getenv("REMOTE_ADDR");
-    $this->sessionRepository->save($session);
+  //   $session = new Session;
+  //   $uuid = Uuid::uuid4();
+  //   $session->id = $uuid->toString();
+  //   $session->user_id = $user->id;
+  //   $session->user_agent = 'Mozilla';
+  //   $session->ip_addr = getenv("REMOTE_ADDR");
+  //   $this->sessionRepository->save($session);
+  //   $uuid = Uuid::uuid4();
+  //   $session->id = $uuid->toString();
+  //   $session->user_id = $user->id;
+  //   $session->user_agent = 'Chrome';
+  //   $session->ip_addr = getenv("REMOTE_ADDR");
+  //   $this->sessionRepository->save($session);
 
-    $result = $this->sessionRepository->findByUserId($user->id);
-    var_dump($result);
-  }
+  //   $result = $this->sessionRepository->findByUserId($user->id);
+  //   var_dump($result);
+  // }
 }

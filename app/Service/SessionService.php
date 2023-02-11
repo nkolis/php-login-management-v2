@@ -21,8 +21,8 @@ class SessionService
     $this->userRepository = $userRepository;
     $this->sessionRepository = $sessionRepository;
     self::$CLIENT = [
-      'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? null,
-      'ip_addr' => $_SERVER['REMOTE_ADDR'] ?? null,
+      'user_agent' => $_SERVER['HTTP_USER_AGENT'] ?? getenv("HTTP_USER_AGENT"),
+      'ip_addr' => $_SERVER['REMOTE_ADDR'] ?? getenv("REMOTE_ADDR"),
     ];
   }
 
@@ -30,6 +30,7 @@ class SessionService
   {
 
     try {
+
       $user = $this->userRepository->findById($request->user_id);
       $session = $this->sessionRepository->findByUserId($request->user_id);
 

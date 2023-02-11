@@ -30,6 +30,10 @@ namespace App\PHPLoginManagement\Service {
       $this->sessionRepository->deleteAll();
       $this->userRepository->deleteAll();
       $_COOKIE[SessionService::$COOKIE] = '';
+      putenv('HTTP_USER_AGENT=Mozilla');
+      putenv('REMOTE_ADDR=127.0.0.1');
+      $_SERVER['HTTP_USER_AGENT'] = 'mozilla';
+      $_SERVER['REMOTE_ADDR'] = getenv("REMOTE_ADDR");
     }
 
     function testCreateSessionSuccess()
@@ -44,6 +48,7 @@ namespace App\PHPLoginManagement\Service {
       $request = new UserSessionRequest();
       $request->id = $this->uuid();
       $request->user_id = $user->id;
+
       $this->sessionService->create($request);
 
       $_COOKIE[SessionService::$COOKIE] = $request->id;

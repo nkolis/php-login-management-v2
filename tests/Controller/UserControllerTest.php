@@ -31,6 +31,8 @@ class UserControllerTest extends TestCase
     $this->sessionRepository->deleteAll();
     $this->userRepository->deleteAll();
     $_COOKIE[SessionService::$COOKIE] = '';
+    $_SERVER['HTTP_USER_AGENT'] = 'mozilla';
+    $_SERVER['REMOTE_ADDR'] = getenv("REMOTE_ADDR");
   }
 
   function testRegister()
@@ -168,7 +170,28 @@ class UserControllerTest extends TestCase
     $this->expectOutputRegex("[Profile]");
     $this->expectOutputRegex("[Password]");
     $this->expectOutputRegex("[Logout]");
-    $this->expectOutputRegex("[Halo kholis, Selamat datang !]");
+    $this->expectOutputRegex("[Halo kholis, Selamat datang!]");
+  }
+
+
+  function testDashboardUserUnverified()
+  {
+
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request);
+
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
+    $this->userController->dashboard();
+    $this->expectOutputRegex("[Please verify your account!]");
   }
 
   function testProfile()
