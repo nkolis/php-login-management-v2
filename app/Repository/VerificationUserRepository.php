@@ -27,10 +27,23 @@ class VerificationUserRepository
     }
   }
 
-  public function findById(?string $id): ?VerificationUser
+
+  public function update(VerificationUser $verification): VerificationUser
+  {
+
+    try {
+      $statement = $this->connection->prepare("UPDATE verification_users SET code = ?, updated_at = ? WHERE id = ?");
+      $statement->execute([$verification->code, $verification->updated_at, $verification->id]);
+      return $verification;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  public function findByUserId(?string $id): ?VerificationUser
   {
     try {
-      $statement = $this->connection->prepare("SELECT id, user_id, code, created_at, updated_at FROM verification_users WHERE id = ?");
+      $statement = $this->connection->prepare("SELECT id, user_id, code, created_at, updated_at FROM verification_users WHERE user_id = ?");
       $statement->execute([$id]);
 
       if ($row = $statement->fetch()) {

@@ -40,7 +40,7 @@ class VerificationUserRepositoryTest extends TestCase
   public function testSaveSuccess()
   {
     $verification = $this->verificationRepository->save($this->verificationData);
-    $result = $this->verificationRepository->findById($verification->id);
+    $result = $this->verificationRepository->findByUserId($verification->user_id);
     $this->assertEquals($verification->id, $result->id);
     $this->assertEquals($verification->code, $result->code);
     $this->assertEquals($verification->updated_at, $result->updated_at);
@@ -55,7 +55,21 @@ class VerificationUserRepositoryTest extends TestCase
 
   public function testFindByIdNotfound()
   {
-    $result = $this->verificationRepository->findById('notfound');
+    $result = $this->verificationRepository->findByUserId('notfound');
     $this->assertNull($result);
+  }
+
+
+  public function testUpdateSuccess()
+  {
+    $verification = $this->verificationRepository->save($this->verificationData);
+    $this->verificationData->code = '54321';
+    $this->verificationData->updated_at = '2023-02-11';
+    $this->verificationRepository->update($this->verificationData);
+    $result = $this->verificationRepository->findByUserId($verification->user_id);
+
+    $this->assertEquals($verification->id, $result->id);
+    $this->assertEquals('54321', $result->code);
+    $this->assertEquals('2023-02-11 00:00:00', $result->updated_at);
   }
 }
