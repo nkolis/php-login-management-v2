@@ -36,6 +36,7 @@ class VerificationUserServiceTest extends TestCase
 
     $class = new ReflectionClass($this->verificationUserService);
     $class->setStaticPropertyValue('expire_code', 60 * 10);
+    putenv("mode=test");
   }
 
   protected function getMethod($name)
@@ -196,5 +197,74 @@ class VerificationUserServiceTest extends TestCase
     $user_verification = new UserVerificationRequest;
     $user_verification->user_id = $user->id;
     $this->verificationUserService->sendVerificationCode($user_verification);
+  }
+
+  public function testVerifyUserSuccess()
+  {
+    $user = new User;
+    $user->id = Uuid::uuid4()->toString();
+    $user->email = 'nurkholis010@gmail.com';
+    $user->name = 'Nur Kholis';
+    $user->password = password_hash('123', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $verification = new VerificationUser;
+    $verification->user_id = $user->id;
+    $verification->code = '123456';
+    $this->verificationUserRepository->save($verification);
+
+    $user_verification = new UserVerificationRequest;
+    $user_verification->user_id = $user->id;
+    $user_verification->code = '123456';
+    $this->verificationUserService->verifyUser($user_verification);
+
+    $result = $this->userRepository->findById($user->id);
+    $this->assertEquals('verified', $result->verification_status);
+    $this->assertNull($this->verificationUserRepository->findByUserId($user->id));
+  }
+
+  public function testVerifyUserWrongCode()
+  {
+    $this->expectExceptionMessage("Incorrect code verification");
+    $user = new User;
+    $user->id = Uuid::uuid4()->toString();
+    $user->email = 'nurkholis010@gmail.com';
+    $user->name = 'Nur Kholis';
+    $user->password = password_hash('123', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $verification = new VerificationUser;
+    $verification->user_id = $user->id;
+    $verification->code = '123456';
+    $this->verificationUserRepository->save($verification);
+
+    $user_verification = new UserVerificationRequest;
+    $user_verification->user_id = $user->id;
+    $user_verification->code = 'salah';
+    $this->verificationUserService->verifyUser($user_verification);
+  }
+
+  public function testVerifyUserExpiredCode()
+  {
+    $this->expectExceptionMessage("Your code verification is expired, send code again!");
+    $user = new User;
+    $user->id = Uuid::uuid4()->toString();
+    $user->email = 'nurkholis010@gmail.com';
+    $user->name = 'Nur Kholis';
+    $user->password = password_hash('123', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $verification = new VerificationUser;
+    $verification->user_id = $user->id;
+    $verification->code = '123456';
+    $this->verificationUserRepository->save($verification);
+
+    $user_verification = new UserVerificationRequest;
+    $user_verification->user_id = $user->id;
+    $user_verification->code = '123456';
+
+    $class = new ReflectionClass($this->verificationUserService);
+    $class->setStaticPropertyValue('expire_code', -1);
+    $this->verificationUserService->verifyUser($user_verification);
   }
 }

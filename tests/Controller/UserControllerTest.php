@@ -5,13 +5,16 @@ namespace App\PHPLoginManagement\Controller;
 use App\PHPLoginManagement\Config\BaseURL;
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Entity\User;
+use App\PHPLoginManagement\Entity\VerificationUser;
 use App\PHPLoginManagement\Model\UserSessionRequest;
 use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
 use App\PHPLoginManagement\Repository\VerificationUserRepository;
 use App\PHPLoginManagement\Service\SessionService;
+use App\PHPLoginManagement\Service\VerificationUserService;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
+use ReflectionClass;
 
 require_once __DIR__ . '/../Helper/helper.php';
 
@@ -21,6 +24,8 @@ class UserControllerTest extends TestCase
   private SessionRepository $sessionRepository;
   private UserRepository $userRepository;
   private SessionService $sessionService;
+  private VerificationUserRepository $verificationRepository;
+  private VerificationUserService $verificationService;
   function setUp(): void
   {
     $connection = Database::getConnection();
@@ -29,13 +34,17 @@ class UserControllerTest extends TestCase
     $this->sessionRepository = new SessionRepository($connection);
     $this->sessionService = new SessionService($this->userRepository, $this->sessionRepository);
     putenv("mode=test");
-    $verificationRepository = new VerificationUserRepository(Database::getConnection());
-    $verificationRepository->deleteAll();
+    $this->verificationRepository = new VerificationUserRepository($connection);
+    $this->verificationService = new VerificationUserService($this->verificationRepository, $this->userRepository);
+    $this->verificationRepository->deleteAll();
     $this->sessionRepository->deleteAll();
     $this->userRepository->deleteAll();
     $_COOKIE[SessionService::$COOKIE] = '';
     $_SERVER['HTTP_USER_AGENT'] = 'mozilla';
     $_SERVER['REMOTE_ADDR'] = getenv("REMOTE_ADDR");
+
+    $class = new ReflectionClass($this->verificationService);
+    $class->setStaticPropertyValue('expire_code', 60 * 10);
   }
 
   function testRegister()
@@ -378,6 +387,171 @@ class UserControllerTest extends TestCase
     $this->expectOutputRegex("[Old password is wrong]");
   }
 
+
+  function testVerification()
+  {
+
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request);
+
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
+    $this->userController->verification();
+    $this->expectOutputRegex("[User verification]");
+    $this->expectOutputRegex("[Enter code here]");
+  }
+
+  function testPostVerificationValidateEmpty()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request);
+
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
+    $_POST['code'] = '';
+    $this->userController->postVerification();
+    $this->expectOutputRegex("[Code can't be empty]");
+  }
+
+
+  function testPostVerificationCodeNotSend()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request);
+
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
+    $_POST['code'] = '123456';
+    $this->userController->postVerification();
+    $this->expectOutputRegex("[Klik send code and check your mail box!]");
+  }
+
+  function testPostVerificationCodeExpired()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request);
+
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
+
+    $verification = new VerificationUser;
+    $verification->user_id = $user->id;
+    $verification->code = '123456';
+    $this->verificationRepository->save($verification);
+
+
+    $class = new ReflectionClass($this->verificationService);
+    $class->setStaticPropertyValue('expire_code', -1);
+    $_POST['code'] = '123456';
+    $this->userController->postVerification();
+    $this->expectOutputRegex("[Your code verification is expired, send code again!]");
+  }
+
+  function testPostVerificationWrongCode()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request);
+
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
+
+    $verification = new VerificationUser;
+    $verification->user_id = $user->id;
+    $verification->code = '123456';
+    $this->verificationRepository->save($verification);
+
+
+    $_POST['code'] = 'salah';
+    $this->userController->postVerification();
+    $this->expectOutputRegex("[Incorrect code verification]");
+  }
+
+  function testPostVerificationSuccess()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request);
+
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
+
+    $verification = new VerificationUser;
+    $verification->user_id = $user->id;
+    $verification->code = '123456';
+    $this->verificationRepository->save($verification);
+
+
+    $_POST['code'] = '123456';
+    $this->userController->postVerification();
+    $this->expectOutputRegex("[Verification Success]");
+    $this->assertNull($this->verificationRepository->findByUserId($user->id));
+  }
+
+  public function testPostSendCodeSuccess()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis010@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request);
+
+    $_COOKIE[SessionService::$COOKIE] = $request->id;
+    $this->userController->postSendcode();
+    $this->expectOutputRegex("[Code has been sent to {$user->email}, check your email box!]");
+  }
 
   private function uuid(): string
   {

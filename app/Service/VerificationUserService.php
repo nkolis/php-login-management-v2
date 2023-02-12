@@ -2,6 +2,7 @@
 
 namespace App\PHPLoginManagement\Service;
 
+use App\PHPLoginManagement\Config\PHPMailerServer;
 use App\PHPLoginManagement\Entity\VerificationUser;
 use App\PHPLoginManagement\Exception\ValidateException;
 use App\PHPLoginManagement\Model\UserVerificationRequest;
@@ -55,11 +56,12 @@ class VerificationUserService
   {
     try {
       $datenow = time();
+
       $codeExpire = false;
       $verification_user = $this->verificationUserRepository->findByUserId($user_id);
 
       if ($verification_user == null) {
-        throw new \Exception("Klik send code and check your mail box!");
+        throw new \Exception(serialize(["verification" => "Klik send code and check your mail box!"]));
       }
 
       $created_at = new DateTime($verification_user->created_at);
@@ -81,7 +83,7 @@ class VerificationUserService
       }
 
       if ($codeExpire) {
-        throw new \Exception("Your code verification is expired, send code again!");
+        throw new \Exception(serialize(["verification" => "Your code verification is expired, send code again!"]));
       }
 
       return $verification_user;
@@ -103,12 +105,13 @@ class VerificationUserService
         // PHP Mailer
         $mail = new PHPMailer(true);
         //Server settings
+        $server_user_conf = PHPMailerServer::get();
         $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = 'smtp.gmail.com';                   //Set the SMTP server to send through
+        $mail->Host       = $server_user_conf['host'];                   //Set the SMTP server to send through
         $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
-        $mail->Username   = 'setiawhan76@gmail.com';                     //SMTP username
-        $mail->Password   = 'uxkfqrkejklsuzxy';                               //SMTP password
+        $mail->Username   = $server_user_conf['username'];                     //SMTP username
+        $mail->Password   = $server_user_conf['password'];                               //SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
@@ -127,8 +130,9 @@ class VerificationUserService
         $mail->Subject = 'PHP Login Management - Verification code';
         $mail->Body    = "<p style='font-size: 20px'>Your verification code is <b>{$user_verification->code}</b></p>";
         $mail->AltBody = "Your verification code is {$user_verification->code}";
-
-        $mail->send();
+        if (getenv("mode") != "test") {
+          $mail->send();
+        }
         echo 'Code has been sent';
       }
     } catch (\Exception $e) {
@@ -140,7 +144,9 @@ class VerificationUserService
   {
     $this->validateVerifyRequest($request);
     try {
+
       $user_verification = $this->currentCodeVerification($request->user_id);
+
 
       if ($user_verification->code == $request->code) {
         $user = $this->userRepository->findById($request->user_id);
@@ -148,7 +154,7 @@ class VerificationUserService
         $this->userRepository->update($user);
         $this->verificationUserRepository->deleteByUserid($request->user_id);
       } else {
-        throw new Exception("Incorrect code verification");
+        throw new Exception(serialize(["verification" => "Incorrect code verification"]));
       }
     } catch (Exception $e) {
       throw $e;
@@ -159,7 +165,7 @@ class VerificationUserService
   private function validateVerifyRequest(UserVerificationRequest $request)
   {
     if (trim($request->code) == '' || $request->code == null) {
-      throw new ValidateException("Code can't be empty");
+      throw new ValidateException(serialize(["code" => "Code can't be empty"]));
     }
   }
 

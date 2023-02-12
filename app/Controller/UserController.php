@@ -11,10 +11,14 @@ use App\PHPLoginManagement\Model\UserPasswordUpdateRequest;
 use App\PHPLoginManagement\Model\UserProfileUpdateRequest;
 use App\PHPLoginManagement\Model\UserRegisterRequest;
 use App\PHPLoginManagement\Model\UserSessionRequest;
+use App\PHPLoginManagement\Model\UserVerificationRequest;
 use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
+use App\PHPLoginManagement\Repository\VerificationUserRepository;
 use App\PHPLoginManagement\Service\SessionService;
 use App\PHPLoginManagement\Service\UserService;
+use App\PHPLoginManagement\Service\VerificationUserService;
+use Exception;
 use Ramsey\Uuid\Uuid;
 
 class UserController
@@ -22,14 +26,17 @@ class UserController
 
   private UserService $userService;
   private SessionService $sessionService;
+  private VerificationUserService $vericationService;
 
   public function __construct()
   {
     $connection = Database::getConnection();
     $userRepository = new UserRepository($connection);
     $sessionRepository = new SessionRepository($connection);
+    $verificationRepository = new VerificationUserRepository($connection);
     $this->userService = new UserService($userRepository);
     $this->sessionService = new SessionService($userRepository, $sessionRepository);
+    $this->vericationService = new VerificationUserService($verificationRepository, $userRepository);
   }
 
   public function dashboard()
@@ -186,6 +193,80 @@ class UserController
           'name' => $current->name,
         ],
         'error' => unserialize($e->getMessage())
+      ]);
+    }
+  }
+
+  public function verification()
+  {
+    $user = $this->sessionService->currentSession();
+    View::render('User/verification', [
+      'title' => 'User verification',
+      'user' => [
+        'id' => $user->user_id,
+        'email' => $user->email,
+        'name' => $user->name,
+      ]
+    ]);
+  }
+
+  public function postVerification()
+  {
+    try {
+      $user = $this->sessionService->currentSession();
+
+
+      $request = new UserVerificationRequest;
+      $request->user_id = $user->user_id;
+      $request->code = strip_tags($_POST['code']);
+
+      $this->vericationService->verifyUser($request);
+      View::render('User/verification', [
+        'title' => 'User verification',
+        'swal' => json_encode([
+          'icon' => 'success',
+          'title' => 'Verification Success',
+          'redirect-url' => BaseURL::get() . '/users/dashboard'
+        ])
+      ]);
+    } catch (Exception $e) {
+      View::render('User/verification', [
+        'title' => 'User verification',
+        'user' => [
+          'id' => $user->user_id,
+          'email' => $user->email,
+          'name' => $user->name,
+        ],
+        'error' => unserialize($e->getMessage())
+      ]);
+    }
+  }
+
+  public function postSendcode()
+  {
+    try {
+      $user = $this->sessionService->currentSession();
+      $request = new UserVerificationRequest;
+      $request->user_id = $user->user_id;
+      $this->vericationService->sendVerificationCode($request);
+      View::render('User/verification', [
+        'title' => 'User verification',
+        'user' => [
+          'id' => $user->user_id,
+          'email' => $user->email,
+          'name' => $user->name,
+        ],
+        'success' => "Code has been sent to {$user->email}, check your email box!"
+      ]);
+    } catch (Exception $e) {
+      View::render('User/verification', [
+        'title' => 'User verification',
+        'user' => [
+          'id' => $user->user_id,
+          'email' => $user->email,
+          'name' => $user->name,
+        ],
+        'error' => ["verification" => "failed to send code, check your internet!"]
       ]);
     }
   }
