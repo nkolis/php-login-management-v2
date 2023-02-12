@@ -21,12 +21,14 @@
     "require": {
       "php": ">=8",
       "ramsey/uuid": "v4.7.x",
-      "monolog/monolog": "v3.2.0"
+      "monolog/monolog": "v3.2.0",
+        "phpmailer/phpmailer": "^6.7"
     },
     "require-dev": {
       "phpunit/phpunit": "v9.5.28",
       "ramsey/uuid": "v4.7.x",
-      "monolog/monolog": "v3.2.0"
+      "monolog/monolog": "v3.2.0",
+      "phpmailer/phpmailer": "^6.7"
 
     }
 }

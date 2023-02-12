@@ -20,7 +20,8 @@ class SessionRepositoryTest extends TestCase
 
     $this->sessionRepository = new SessionRepository($connection);
     $this->userRepository = new UserRepository($connection);
-
+    $verificationRepository = new VerificationUserRepository(Database::getConnection());
+    $verificationRepository->deleteAll();
     $this->sessionRepository->deleteAll();
     $this->userRepository->deleteAll();
   }

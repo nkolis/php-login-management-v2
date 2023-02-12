@@ -7,9 +7,11 @@ namespace App\PHPLoginManagement\Middleware {
   use App\PHPLoginManagement\Config\BaseURL;
   use App\PHPLoginManagement\Config\Database;
   use App\PHPLoginManagement\Entity\User;
+  use App\PHPLoginManagement\Entity\VerificationUser;
   use App\PHPLoginManagement\Model\UserSessionRequest;
   use App\PHPLoginManagement\Repository\SessionRepository;
   use App\PHPLoginManagement\Repository\UserRepository;
+  use App\PHPLoginManagement\Repository\VerificationUserRepository;
   use App\PHPLoginManagement\Service\SessionService;
   use PHPUnit\Framework\TestCase;
   use Ramsey\Uuid\Uuid;
@@ -29,6 +31,8 @@ namespace App\PHPLoginManagement\Middleware {
       $this->sessionRepository = new SessionRepository($connection);
       $this->sessionService = new SessionService($this->userRepository, $this->sessionRepository);
       $this->middleware = new MustLoginMiddleware;
+      $verificationRepository = new VerificationUserRepository(Database::getConnection());
+      $verificationRepository->deleteAll();
       $this->sessionRepository->deleteAll();
       $this->userRepository->deleteAll();
       $_COOKIE[SessionService::$COOKIE] = '';

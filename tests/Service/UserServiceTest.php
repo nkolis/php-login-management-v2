@@ -13,6 +13,7 @@ use App\PHPLoginManagement\Model\UserRegisterRequest;
 use App\PHPLoginManagement\Model\UserRegisterResponse;
 use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
+use App\PHPLoginManagement\Repository\VerificationUserRepository;
 use Exception;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -38,6 +39,8 @@ class UserServiceTest extends TestCase
     $user->name = 'Nur Kholis';
     $user->password = 'rahasia';
     $this->user = $user;
+    $verificationRepository = new VerificationUserRepository(Database::getConnection());
+    $verificationRepository->deleteAll();
     $this->sessionRepository->deleteAll();
     $this->userRepository->deleteAll();
   }

@@ -64,6 +64,13 @@ class VerificationUserRepository
     }
   }
 
+
+  public function deleteByUserid(string $id)
+  {
+    $statement = $this->connection->prepare("DELETE FROM verification_users WHERE user_id = ?");
+    $statement->execute([$id]);
+  }
+
   public function deleteAll(): void
   {
     $this->connection->exec("DELETE FROM verification_users");

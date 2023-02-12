@@ -8,6 +8,7 @@ use App\PHPLoginManagement\Entity\User;
 use App\PHPLoginManagement\Model\UserSessionRequest;
 use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
+use App\PHPLoginManagement\Repository\VerificationUserRepository;
 use App\PHPLoginManagement\Service\SessionService;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
@@ -28,6 +29,8 @@ class UserControllerTest extends TestCase
     $this->sessionRepository = new SessionRepository($connection);
     $this->sessionService = new SessionService($this->userRepository, $this->sessionRepository);
     putenv("mode=test");
+    $verificationRepository = new VerificationUserRepository(Database::getConnection());
+    $verificationRepository->deleteAll();
     $this->sessionRepository->deleteAll();
     $this->userRepository->deleteAll();
     $_COOKIE[SessionService::$COOKIE] = '';

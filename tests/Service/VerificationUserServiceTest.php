@@ -11,6 +11,7 @@ use App\PHPLoginManagement\Model\UserVerificationRequest;
 use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
 use App\PHPLoginManagement\Repository\VerificationUserRepository;
+use Exception;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use ReflectionClass;
@@ -27,11 +28,14 @@ class VerificationUserServiceTest extends TestCase
     $connection = Database::getConnection();
     $this->userRepository = new UserRepository($connection);
     $this->verificationUserRepository = new VerificationUserRepository($connection);
-    $this->verificationUserService = new VerificationUserService($this->verificationUserRepository);
+    $this->verificationUserService = new VerificationUserService($this->verificationUserRepository, $this->userRepository);
     $sessionRepository = new SessionRepository($connection);
     $this->verificationUserRepository->deleteAll();
     $sessionRepository->deleteAll();
     $this->userRepository->deleteAll();
+
+    $class = new ReflectionClass($this->verificationUserService);
+    $class->setStaticPropertyValue('expire_code', 60 * 10);
   }
 
   protected function getMethod($name)
@@ -61,7 +65,7 @@ class VerificationUserServiceTest extends TestCase
 
     $user_verification = new UserVerificationRequest;
     $user_verification->user_id = $user->id;
-    $this->verificationUserService->generateCodeVerification($user_verification);
+    $this->getMethod('generateCodeVerification')->invoke($this->verificationUserService, $user_verification);
 
     $result = $this->verificationUserRepository->findByUserId($user->id);
 
@@ -81,8 +85,8 @@ class VerificationUserServiceTest extends TestCase
 
     $user_verification = new UserVerificationRequest;
     $user_verification->user_id = $user->id;
-    $this->verificationUserService->generateCodeVerification($user_verification);
-    $this->verificationUserService->generateCodeVerification($user_verification);
+    $this->getMethod('generateCodeVerification')->invoke($this->verificationUserService, $user_verification);
+    $this->getMethod('generateCodeVerification')->invoke($this->verificationUserService, $user_verification);
 
     $result = $this->verificationUserRepository->findByUserId($user->id);
 
@@ -108,7 +112,7 @@ class VerificationUserServiceTest extends TestCase
 
     $user_verification = new UserVerificationRequest;
     $user_verification->user_id = $user->id;
-    $this->verificationUserService->generateCodeVerification($user_verification);
+    $this->getMethod('generateCodeVerification')->invoke($this->verificationUserService, $user_verification);
 
     $result = $this->verificationUserService->currentCodeVerification($user->id);
     $this->assertEquals(VerificationUser::class, $result::class);
@@ -129,7 +133,7 @@ class VerificationUserServiceTest extends TestCase
 
     $user_verification = new UserVerificationRequest;
     $user_verification->user_id = $user->id;
-    $this->verificationUserService->generateCodeVerification($user_verification);
+    $this->getMethod('generateCodeVerification')->invoke($this->verificationUserService, $user_verification);
 
     $class = new ReflectionClass($this->verificationUserService);
     $class->setStaticPropertyValue('expire_code', -1);
@@ -150,13 +154,47 @@ class VerificationUserServiceTest extends TestCase
 
     $user_verification = new UserVerificationRequest;
     $user_verification->user_id = $user->id;
-    $this->verificationUserService->generateCodeVerification($user_verification);
-    $this->verificationUserService->generateCodeVerification($user_verification);
+    $this->getMethod('generateCodeVerification')->invoke($this->verificationUserService, $user_verification);
+    $this->getMethod('generateCodeVerification')->invoke($this->verificationUserService, $user_verification);
 
     $class = new ReflectionClass($this->verificationUserService);
     $class->setStaticPropertyValue('expire_code', -1);
 
     $method = $class->getMethod('currentCodeVerification');
     $result = $method->invoke($this->verificationUserService, $user->id);
+  }
+
+  // public function testCurrentCodeVerificationUpdateNotExpired()
+  // {
+  // }
+
+  public function testSendVerificationCodeSuccess()
+  {
+    $user = new User;
+    $user->id = Uuid::uuid4()->toString();
+    $user->email = 'nurkholis010@gmail.com';
+    $user->name = 'Nur Kholis';
+    $user->password = password_hash('123', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $user_verification = new UserVerificationRequest;
+    $user_verification->user_id = $user->id;
+    $this->verificationUserService->sendVerificationCode($user_verification);
+    $this->expectOutputRegex("[Code has been sent]");
+  }
+
+  public function testSendVerificationCodeError()
+  {
+    $this->expectException(Exception::class);
+    $user = new User;
+    $user->id = Uuid::uuid4()->toString();
+    $user->email = 'nurkholis';
+    $user->name = 'Nur Kholis';
+    $user->password = password_hash('123', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+
+    $user_verification = new UserVerificationRequest;
+    $user_verification->user_id = $user->id;
+    $this->verificationUserService->sendVerificationCode($user_verification);
   }
 }
