@@ -61,7 +61,7 @@ class VerificationUserService
       $verification_user = $this->verificationUserRepository->findByUserId($user_id);
 
       if ($verification_user == null) {
-        throw new \Exception(serialize(["verification" => "Klik send code and check your mail box!"]));
+        throw new \Exception(serialize(["verification" => "Please send code and check your mail box!"]));
       }
 
       $created_at = new DateTime($verification_user->created_at);

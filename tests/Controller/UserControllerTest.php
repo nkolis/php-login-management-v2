@@ -447,7 +447,7 @@ class UserControllerTest extends TestCase
     $_COOKIE[SessionService::$COOKIE] = $request->id;
     $_POST['code'] = '123456';
     $this->userController->postVerification();
-    $this->expectOutputRegex("[Klik send code and check your mail box!]");
+    $this->expectOutputRegex("[Please send code and check your mail box!]");
   }
 
   function testPostVerificationCodeExpired()
@@ -550,7 +550,7 @@ class UserControllerTest extends TestCase
 
     $_COOKIE[SessionService::$COOKIE] = $request->id;
     $this->userController->postSendcode();
-    $this->expectOutputRegex("[Code has been sent to {$user->email}, check your email box!]");
+    $this->expectOutputRegex("[Code has been sent to <b>{$user->email}</b>, please check your email box!]");
   }
 
   private function uuid(): string

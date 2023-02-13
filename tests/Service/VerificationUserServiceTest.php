@@ -98,7 +98,7 @@ class VerificationUserServiceTest extends TestCase
 
   public function testCurrentCodeVerificationNotFound()
   {
-    $this->expectExceptionMessage("Klik send code and check your mail box!");
+    $this->expectExceptionMessage("Please send code and check your mail box!");
     $this->verificationUserService->currentCodeVerification('notfound');
   }
 

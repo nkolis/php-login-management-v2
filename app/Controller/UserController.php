@@ -256,7 +256,7 @@ class UserController
           'email' => $user->email,
           'name' => $user->name,
         ],
-        'success' => "Code has been sent to {$user->email}, check your email box!"
+        'success' => "Code has been sent to <b>{$user->email}</b>, please check your email box!"
       ]);
     } catch (Exception $e) {
       View::render('User/verification', [
@@ -266,7 +266,7 @@ class UserController
           'email' => $user->email,
           'name' => $user->name,
         ],
-        'error' => ["verification" => "failed to send code, check your internet!"]
+        'error' => ["verification" => $e->getMessage()]
       ]);
     }
   }
