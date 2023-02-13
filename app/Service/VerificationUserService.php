@@ -92,37 +92,34 @@ class VerificationUserService
     }
   }
 
-
   public function sendVerificationCode(UserVerificationRequest $request): void
   {
     try {
       $user = $this->userRepository->findById($request->user_id);
-
       if ($user != null) {
         $this->generateCodeVerification($request);
         $user_verification = $this->currentCodeVerification($user->id);
-
         // PHP Mailer
         $mail = new PHPMailer(true);
         //Server settings
         $server_user_conf = PHPMailerServer::get();
-        $mail->SMTPDebug = 2;                      //Enable verbose debug output
-        $mail->isSMTP();                                            //Send using SMTP
-        $mail->Host       = $server_user_conf['host'];                   //Set the SMTP server to send through
+        $mail->SMTPDebug = SMTP::DEBUG_OFF;                 //Enable verbose debug output
+        $mail->isSMTP();                                    //Send using SMTP
+        $mail->Host       = $server_user_conf['host'];      //Set the SMTP server to send through
         $mail->SMTPAuth   = true;
+        $mail->SMTPKeepAlive = true;
 
-        $mail->Username   = $server_user_conf['username'];                     //SMTP username
-        $mail->Password   = $server_user_conf['password'];                               //SMTP password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
-        $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
+        $mail->Username   = $server_user_conf['username'];   //SMTP username
+        $mail->Password   = $server_user_conf['password'];   //SMTP password
+        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;     //Enable implicit TLS encryption
+        $mail->Port       = 465;                             //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
         $mail->setFrom($server_user_conf['username'], 'PHP Login Management');
         $mail->addAddress($user->email, $user->name);     //Add a recipient
 
-
         //Content
-        $mail->isHTML(true);                                  //Set email format to HTML
+        $mail->isHTML(true);                              //Set email format to HTML
         $mail->Subject = 'PHP Login Management - Verification code';
         $mail->Body    = "<p style='font-size: 20px'>Your verification code is <b>{$user_verification->code}</b></p>";
         $mail->AltBody = "Your verification code is {$user_verification->code}";
@@ -170,12 +167,10 @@ class VerificationUserService
 
   private function randCode(int $length): array|string
   {
-    $code = [];
-
-    while (sizeof($code) < $length) {
-      $code[] = rand(0, 9);
+    $code = '';
+    for ($i = 0; $i < $length; $i++) {
+      $code .= rand(0, 9);
     }
-
-    return implode($code);
+    return $code;
   }
 }
