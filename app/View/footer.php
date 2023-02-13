@@ -3,12 +3,15 @@
   if (swalConfig != '') {
     swalConfig = JSON.parse(swalConfig);
     Swal.fire({
-      title: swalConfig['title'],
+      title: swalConfig['title'] || '',
+      text: swalConfig['text'] || '',
       icon: swalConfig['icon'],
-      showConfirmButton: false,
-      timer: 1000,
+      showConfirmButton: swalConfig['showConfirmButton'] || false,
+      timer: swalConfig['timer'] || 0,
     }).then(function() {
-      location = swalConfig['redirect-url']
+      if (swalConfig['redirect-url'] != undefined) {
+        location = swalConfig['redirect-url']
+      }
     });
   }
   const formControlElement = document.querySelectorAll(".form-control");

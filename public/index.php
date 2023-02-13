@@ -7,6 +7,8 @@ use App\PHPLoginManagement\Controller\UserController;
 use App\PHPLoginManagement\Core\Router;
 use App\PHPLoginManagement\Middleware\MustLoginMiddleware;
 use App\PHPLoginManagement\Middleware\MustNotLoginMiddleware;
+use App\PHPLoginManagement\Middleware\MustNotVerifyMiddleware;
+use App\PHPLoginManagement\Middleware\MustVerifyMiddleware;
 
 // Home
 Router::add(method: 'GET', path: '/', controller: HomeController::class, function: 'index', middleware: [MustNotLoginMiddleware::class]);
@@ -21,17 +23,17 @@ Router::add(method: 'GET', path: '/users/login', controller: UserController::cla
 Router::add(method: 'POST', path: '/users/login', controller: UserController::class, function: 'postLogin', middleware: [MustNotLoginMiddleware::class]);
 
 // User Profile
-Router::add(method: 'GET', path: '/users/profile', controller: UserController::class, function: 'profile', middleware: [MustLoginMiddleware::class]);
-Router::add(method: 'POST', path: '/users/profile', controller: UserController::class, function: 'postUpdateProfile', middleware: [MustLoginMiddleware::class]);
+Router::add(method: 'GET', path: '/users/profile', controller: UserController::class, function: 'profile', middleware: [MustLoginMiddleware::class, MustVerifyMiddleware::class]);
+Router::add(method: 'POST', path: '/users/profile', controller: UserController::class, function: 'postUpdateProfile', middleware: [MustLoginMiddleware::class, MustVerifyMiddleware::class]);
 
 // User Password
-Router::add(method: 'GET', path: '/users/password', controller: UserController::class, function: 'password', middleware: [MustLoginMiddleware::class]);
-Router::add(method: 'POST', path: '/users/password', controller: UserController::class, function: 'postUpdatePassword', middleware: [MustLoginMiddleware::class]);
+Router::add(method: 'GET', path: '/users/password', controller: UserController::class, function: 'password', middleware: [MustLoginMiddleware::class, MustVerifyMiddleware::class]);
+Router::add(method: 'POST', path: '/users/password', controller: UserController::class, function: 'postUpdatePassword', middleware: [MustLoginMiddleware::class, MustVerifyMiddleware::class]);
 
 // User verification
-Router::add(method: 'GET', path: '/users/verification', controller: UserController::class, function: 'verification', middleware: [MustLoginMiddleware::class]);
-Router::add(method: 'POST', path: '/users/verification', controller: UserController::class, function: 'postVerification', middleware: [MustLoginMiddleware::class]);
-Router::add(method: 'POST', path: '/users/verification/sendcode', controller: UserController::class, function: 'postSendcode', middleware: [MustLoginMiddleware::class]);
+Router::add(method: 'GET', path: '/users/verification', controller: UserController::class, function: 'verification', middleware: [MustLoginMiddleware::class, MustNotVerifyMiddleware::class]);
+Router::add(method: 'POST', path: '/users/verification', controller: UserController::class, function: 'postVerification', middleware: [MustLoginMiddleware::class, MustNotVerifyMiddleware::class]);
+Router::add(method: 'POST', path: '/users/verification/sendcode', controller: UserController::class, function: 'postSendcode', middleware: [MustLoginMiddleware::class, MustNotVerifyMiddleware::class]);
 
 // User logout
 Router::add(method: 'GET', path: '/users/logout', controller: UserController::class, function: 'logout', middleware: [MustLoginMiddleware::class]);
