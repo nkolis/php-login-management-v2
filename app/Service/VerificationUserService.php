@@ -2,17 +2,17 @@
 
 namespace App\PHPLoginManagement\Service;
 
-use App\PHPLoginManagement\Config\PHPMailerServer;
+
 use App\PHPLoginManagement\Entity\VerificationUser;
 use App\PHPLoginManagement\Exception\ValidateException;
+use App\PHPLoginManagement\Lib\Mailer;
 use App\PHPLoginManagement\Model\UserVerificationRequest;
 use App\PHPLoginManagement\Model\UserVerificationResponse;
 use App\PHPLoginManagement\Repository\UserRepository;
 use App\PHPLoginManagement\Repository\VerificationUserRepository;
 use DateTime;
 use Exception;
-use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
+
 
 
 class VerificationUserService
@@ -100,22 +100,7 @@ class VerificationUserService
         $this->generateCodeVerification($request);
         $user_verification = $this->currentCodeVerification($user->id);
         // PHP Mailer
-        $mail = new PHPMailer(true);
-        //Server settings
-        $server_user_conf = PHPMailerServer::get();
-        $mail->SMTPDebug = SMTP::DEBUG_OFF;                 //Enable verbose debug output
-        $mail->isSMTP();                                    //Send using SMTP
-        $mail->Host       = $server_user_conf['host'];      //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;
-        $mail->SMTPKeepAlive = true;
-
-        $mail->Username   = $server_user_conf['username'];   //SMTP username
-        $mail->Password   = $server_user_conf['password'];   //SMTP password
-        $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;     //Enable implicit TLS encryption
-        $mail->Port       = 465;                             //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
-
-        //Recipients
-        $mail->setFrom($server_user_conf['username'], 'PHP Login Management');
+        $mail = Mailer::get();
         $mail->addAddress($user->email, $user->name);     //Add a recipient
 
         //Content

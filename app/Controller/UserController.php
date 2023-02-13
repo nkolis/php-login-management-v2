@@ -105,6 +105,7 @@ class UserController
         'swal' => json_encode([
           'icon' => 'success',
           'title' => 'Login Success',
+          'timer' => 1000,
           'redirect-url' => BaseURL::get() . '/users/dashboard'
         ])
       ]);
@@ -226,6 +227,7 @@ class UserController
         'swal' => json_encode([
           'icon' => 'success',
           'title' => 'Verification Success',
+          'timer' => 1000,
           'redirect-url' => BaseURL::get() . '/users/dashboard'
         ])
       ]);
