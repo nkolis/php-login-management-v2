@@ -106,10 +106,11 @@ class VerificationUserService
         $mail = new PHPMailer(true);
         //Server settings
         $server_user_conf = PHPMailerServer::get();
-        $mail->SMTPDebug = SMTP::DEBUG_OFF;                      //Enable verbose debug output
+        $mail->SMTPDebug = 2;                      //Enable verbose debug output
         $mail->isSMTP();                                            //Send using SMTP
         $mail->Host       = $server_user_conf['host'];                   //Set the SMTP server to send through
-        $mail->SMTPAuth   = true;                                   //Enable SMTP authentication
+        $mail->SMTPAuth   = true;
+
         $mail->Username   = $server_user_conf['username'];                     //SMTP username
         $mail->Password   = $server_user_conf['password'];                               //SMTP password
         $mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;            //Enable implicit TLS encryption
@@ -118,11 +119,6 @@ class VerificationUserService
         //Recipients
         $mail->setFrom($server_user_conf['username'], 'PHP Login Management');
         $mail->addAddress($user->email, $user->name);     //Add a recipient
-        //$mail->addAddress('ellen@example.com');               //Name is optional
-        $mail->addReplyTo($server_user_conf['username'], 'Information');
-        // $mail->addCC('cc@example.com');
-        // $mail->addBCC('bcc@example.com');
-
 
 
         //Content
@@ -132,8 +128,9 @@ class VerificationUserService
         $mail->AltBody = "Your verification code is {$user_verification->code}";
         if (getenv("mode") != "test") {
           $mail->send();
+          $mail->clearAddresses();
+          $mail->smtpClose();
         }
-        echo 'Code has been sent';
       }
     } catch (\Exception $e) {
       throw $e;

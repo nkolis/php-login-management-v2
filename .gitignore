@@ -1,5 +1,6 @@
 vendor
 app.log
+scret.txt
 .vscode
 .idea
 .phpunit.result.cache

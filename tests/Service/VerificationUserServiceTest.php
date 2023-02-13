@@ -181,7 +181,7 @@ class VerificationUserServiceTest extends TestCase
     $user_verification = new UserVerificationRequest;
     $user_verification->user_id = $user->id;
     $this->verificationUserService->sendVerificationCode($user_verification);
-    $this->expectOutputRegex("[Code has been sent]");
+    $this->expectOutputRegex("[]");
   }
 
   public function testSendVerificationCodeError()
