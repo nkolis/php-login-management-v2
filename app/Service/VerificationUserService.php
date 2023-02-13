@@ -116,10 +116,10 @@ class VerificationUserService
         $mail->Port       = 465;                                    //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
         //Recipients
-        $mail->setFrom('setiawhan76@gmail.com', 'PHP Login Management');
+        $mail->setFrom($server_user_conf['username'], 'PHP Login Management');
         $mail->addAddress($user->email, $user->name);     //Add a recipient
         //$mail->addAddress('ellen@example.com');               //Name is optional
-        $mail->addReplyTo('setiawhan76@gmail.com', 'Information');
+        $mail->addReplyTo($server_user_conf['username'], 'Information');
         // $mail->addCC('cc@example.com');
         // $mail->addBCC('bcc@example.com');
 
