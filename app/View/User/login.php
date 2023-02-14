@@ -29,6 +29,7 @@ use App\PHPLoginManagement\Config\BaseURL;
             <div id="email" class="invalid-feedback"><?= $model['error']['email'] ?></div>
           <?php } ?>
         </div>
+
         <div class="form-floating mb-2">
           <input type="password" class="form-control <?= isset($model['error']['password']) ? 'is-invalid' : '' ?>" placeholder="Password" name="password" id="password" />
           <label for="password">Password</label>
@@ -36,8 +37,12 @@ use App\PHPLoginManagement\Config\BaseURL;
             <div id="password" class="invalid-feedback"><?= $model['error']['password'] ?></div>
           <?php } ?>
         </div>
+
         <button class="btn btn-primary w-100 p-2 mb-2" type="submit">Login</button>
         <span>Belum punya akun? </span> <a href="<?= BaseURL::get() ?>/users/register">Register</a>
+
+        <a href="<?= BaseURL::get() ?>/users/password_reset">Lupa password?</a>
+
       </form>
     </div>
 
