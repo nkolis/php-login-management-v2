@@ -29,19 +29,26 @@ use App\PHPLoginManagement\Config\BaseURL;
             <div id="email" class="invalid-feedback"><?= $model['error']['email'] ?></div>
           <?php } ?>
         </div>
-
-        <div class="form-floating mb-2">
-          <input type="password" class="form-control <?= isset($model['error']['password']) ? 'is-invalid' : '' ?>" placeholder="Password" name="password" id="password" />
-          <label for="password">Password</label>
+        <div class="input-group mb-2 <?= isset($model['error']['password']) ? 'has-validation' : '' ?>">
+          <div class="form-floating">
+            <input type="password" class="form-control <?= isset($model['error']['password']) ? 'is-invalid' : '' ?>" placeholder="Password" name="password" id="password" />
+            <label for="password">Password</label>
+          </div>
+          <button type="button" class="input-group-text bg-transparent" id="toggle-password"><i class="bi bi-eye-slash"></i></button>
           <?php if (isset($model['error']['password'])) { ?>
-            <div id="password" class="invalid-feedback"><?= $model['error']['password'] ?></div>
+            <div id="password" class="invalid-feedback d-block"><?= $model['error']['password'] ?></div>
           <?php } ?>
+
+        </div>
+
+        <div class="text-end mb-3">
+          <a href="<?= BaseURL::get() ?>/users/password_reset">Lupa password?</a>
         </div>
 
         <button class="btn btn-primary w-100 p-2 mb-2" type="submit">Login</button>
         <span>Belum punya akun? </span> <a href="<?= BaseURL::get() ?>/users/register">Register</a>
 
-        <a href="<?= BaseURL::get() ?>/users/password_reset">Lupa password?</a>
+
 
       </form>
     </div>

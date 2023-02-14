@@ -25,6 +25,23 @@
       }
     });
   });
+
+  const togglePasswordElement = document.querySelector('#toggle-password');
+  const toggleEyeElement = togglePasswordElement.firstElementChild;
+  const inputPasswordElement = document.querySelector("#password");
+  togglePasswordElement.addEventListener('click', (e) => {
+    e.preventDefault();
+    togglePasswordElement.classList.toggle('eye');
+    if (togglePasswordElement.classList.contains('eye')) {
+      inputPasswordElement.setAttribute('type', 'text');
+      toggleEyeElement.classList.remove('bi-eye-slash');
+      toggleEyeElement.classList.toggle('bi-eye');
+    } else {
+      inputPasswordElement.setAttribute('type', 'password');
+      toggleEyeElement.classList.remove('bi-eye');
+      toggleEyeElement.classList.toggle('bi-eye-slash');
+    }
+  });
 </script>
 </body>
 
