@@ -22,26 +22,32 @@
       const value = target.value;
       if (value != "" && target.classList.contains("is-invalid")) {
         target.classList.remove("is-invalid");
+        const inputGroupEl = target.parentNode.parentNode;
+        if (inputGroupEl.classList.contains('input-group')) {
+          inputGroupEl.lastElementChild.classList.remove('d-block');
+        }
       }
     });
   });
 
-  const togglePasswordElement = document.querySelector('#toggle-password');
-  const toggleEyeElement = togglePasswordElement.firstElementChild;
-  const inputPasswordElement = document.querySelector("#password");
-  togglePasswordElement.addEventListener('click', (e) => {
-    e.preventDefault();
-    togglePasswordElement.classList.toggle('eye');
-    if (togglePasswordElement.classList.contains('eye')) {
-      inputPasswordElement.setAttribute('type', 'text');
-      toggleEyeElement.classList.remove('bi-eye-slash');
-      toggleEyeElement.classList.toggle('bi-eye');
-    } else {
-      inputPasswordElement.setAttribute('type', 'password');
-      toggleEyeElement.classList.remove('bi-eye');
-      toggleEyeElement.classList.toggle('bi-eye-slash');
-    }
-  });
+  const togglePasswordElement = document.querySelectorAll('#toggle-password');
+
+  const inputPasswordElement = document.querySelectorAll("input[type=password]");
+  togglePasswordElement.forEach((el, i) => {
+    el.addEventListener('click', (e) => {
+      const input = inputPasswordElement[i];
+      const eyeElement = el.firstElementChild;
+      if (input.getAttribute('type') == 'password') {
+        input.setAttribute('type', 'text');
+        eyeElement.classList.remove('bi-eye-slash');
+        eyeElement.classList.add('bi-eye');
+      } else {
+        input.setAttribute('type', 'password');
+        eyeElement.classList.remove('bi-eye');
+        eyeElement.classList.add('bi-eye-slash');
+      }
+    })
+  })
 </script>
 </body>
 

@@ -21,20 +21,24 @@ use App\PHPLoginManagement\Config\BaseURL;
         <input type="text" class="form-control" placeholder="Name" name="name" id="name" disabled value="<?= $model['user']['name'] ?? $_POST['name'] ?>" />
         <label for="name">Name</label>
       </div>
-
-      <div class="form-floating mb-2">
-        <input type="password" class="form-control <?= isset($model['error']['oldPassword']) ? 'is-invalid' : '' ?>" placeholder="Old Password" name="oldPassword" id="oldPassword" />
-        <label for="oldPassword">Old Password</label>
+      <div class="input-group mb-2 <?= isset($model['error']['oldPassword']) ? 'has-validation' : '' ?>">
+        <div class="form-floating">
+          <input type="password" class="form-control <?= isset($model['error']['oldPassword']) ? 'is-invalid' : '' ?>" placeholder="Old Password" name="oldPassword" id="oldPassword" />
+          <label for="oldPassword">Old Password</label>
+        </div>
+        <button type="button" class="input-group-text bg-transparent" id="toggle-password"><i class="bi bi-eye-slash"></i></button>
         <?php if (isset($model['error']['oldPassword'])) { ?>
-          <div id="oldPassword" class="invalid-feedback"><?= $model['error']['oldPassword'] ?></div>
+          <div id="oldPassword" class="invalid-feedback d-block"><?= $model['error']['oldPassword'] ?></div>
         <?php } ?>
       </div>
-
-      <div class="form-floating mb-2">
-        <input type="password" class="form-control <?= isset($model['error']['newPassword']) ? 'is-invalid' : '' ?>" placeholder="New Password" name="newPassword" id="newPassword" />
-        <label for="newPassword">New Password</label>
+      <div class="input-group mb-2 <?= isset($model['error']['newPassword']) ? 'has-validation' : '' ?>">
+        <div class="form-floating">
+          <input type="password" class="form-control <?= isset($model['error']['newPassword']) ? 'is-invalid' : '' ?>" placeholder="New Password" name="newPassword" id="newPassword" />
+          <label for="newPassword">New Password</label>
+        </div>
+        <button type="button" class="input-group-text bg-transparent" id="toggle-password"><i class="bi bi-eye-slash"></i></button>
         <?php if (isset($model['error']['newPassword'])) { ?>
-          <div id="newPassword" class="invalid-feedback"><?= $model['error']['newPassword'] ?></div>
+          <div id="newPassword" class="invalid-feedback d-block"><?= $model['error']['newPassword'] ?></div>
         <?php } ?>
       </div>
       <button class="btn btn-primary w-100 p-2" type="submit">Update Password</button>

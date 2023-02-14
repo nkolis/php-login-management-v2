@@ -26,11 +26,15 @@ use App\PHPLoginManagement\Config\BaseURL;
           <div id="name" class="invalid-feedback"><?= $model['error']['name'] ?></div>
         <?php } ?>
       </div>
-      <div class="form-floating mb-2">
-        <input type="password" class="form-control <?= isset($model['error']['password']) ? 'is-invalid' : '' ?>" placeholder="Password" name="password" id="password" />
-        <label for="password">Password</label>
+      <div class="input-group mb-2 <?= isset($model['error']['password']) ? 'has-validation' : '' ?>">
+        <div class="form-floating">
+          <input type="password" class="form-control <?= isset($model['error']['password']) ? 'is-invalid' : '' ?>" placeholder="Password" name="password" id="password" />
+          <label for="password">Password</label>
+        </div>
+        <button type="button" class="input-group-text bg-transparent" id="toggle-password"><i class="bi bi-eye-slash"></i></button>
+
         <?php if (isset($model['error']['password'])) { ?>
-          <div id="password" class="invalid-feedback"><?= $model['error']['password'] ?></div>
+          <div id="password" class="invalid-feedback d-block"><?= $model['error']['password'] ?></div>
         <?php } ?>
       </div>
       <button class="btn btn-primary w-100 p-2 mb-2" type="submit">Register</button>
