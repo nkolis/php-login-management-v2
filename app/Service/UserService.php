@@ -13,6 +13,7 @@ use App\PHPLoginManagement\Model\UserProfileUpdateRequest;
 use App\PHPLoginManagement\Model\UserProfileUpdateResponse;
 use App\PHPLoginManagement\Model\UserRegisterRequest;
 use App\PHPLoginManagement\Model\UserRegisterResponse;
+use App\PHPLoginManagement\Model\UserVerificationRequest;
 use App\PHPLoginManagement\Repository\UserRepository;
 use Exception;
 use Monolog\Handler\StreamHandler;
@@ -140,6 +141,29 @@ class UserService
         'password' => $request->password
       ]]);
       throw $e;
+    }
+  }
+
+  public function sendRequestPasswordReset(string $email): User
+  {
+    $this->validatePasswordReset($email);
+
+    try {
+      $user = $this->userRepository->findByEmail($email);
+      if ($user == null) {
+        throw new ValidateException(serialize(['error_email' => 'Email not registered!']));
+      }
+
+      return $user;
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+  private function validatePasswordReset($value)
+  {
+    if (trim($value) == '' || $value == null) {
+      throw new ValidateException(serialize(['email' => "Email can't be empty"]));
     }
   }
 

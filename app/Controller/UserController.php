@@ -272,4 +272,24 @@ class UserController
       ]);
     }
   }
+
+  public function passwordReset()
+  {
+    View::render('User/password_reset', [
+      'title' => 'User password',
+    ]);
+  }
+
+  public function postPasswordReset()
+  {
+    try {
+      $response = $this->userService->sendRequestPasswordReset(strip_tags($_POST['email']));
+      View::redirect('/users/password_reset/verify');
+    } catch (Exception $e) {
+      View::render('User/password_reset', [
+        'title' => 'User password',
+        'error' => unserialize($e->getMessage())
+      ]);
+    }
+  }
 }

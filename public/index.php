@@ -38,4 +38,8 @@ Router::add(method: 'POST', path: '/users/verification/sendcode', controller: Us
 // User logout
 Router::add(method: 'GET', path: '/users/logout', controller: UserController::class, function: 'logout', middleware: [MustLoginMiddleware::class]);
 
+// User password reset
+Router::add(method: 'GET', path: '/users/password_reset', controller: UserController::class, function: 'passwordReset', middleware: []);
+Router::add(method: 'POST', path: '/users/password_reset', controller: UserController::class, function: 'postPasswordReset', middleware: []);
+
 Router::run();
