@@ -553,6 +553,34 @@ class UserControllerTest extends TestCase
     $this->expectOutputRegex("[Code has been sent to <b>{$user->email}</b>, please check your email box!]");
   }
 
+  public function testPasswordReset()
+  {
+    $this->userController->passwordReset();
+    $this->expectOutputRegex("[User password]");
+    $this->expectOutputRegex("[Email]");
+  }
+
+  public function testSendPasswordResetEmailNotRegistered()
+  {
+    $_POST['email'] = 'notfound';
+    $this->userController->postPasswordReset();
+    $this->expectOutputRegex("[Email not registered!]");
+  }
+
+  public function testSendPasswordResetSuccess()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis010@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+    $_POST['email'] = $user->email;
+    $this->userController->postPasswordReset();
+    $baseurl = BaseURL::get();
+    $this->expectOutputRegex("[Location: $baseurl/users/password_reset/verify]");
+  }
+
   private function uuid(): string
   {
     $uuid = Uuid::uuid4();

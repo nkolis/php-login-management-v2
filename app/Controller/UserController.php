@@ -6,6 +6,7 @@ use App\PHPLoginManagement\Config\BaseURL;
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Core\View;
 use App\PHPLoginManagement\Exception\ValidateException;
+use App\PHPLoginManagement\Helper\Flasher;
 use App\PHPLoginManagement\Model\UserLoginRequest;
 use App\PHPLoginManagement\Model\UserPasswordUpdateRequest;
 use App\PHPLoginManagement\Model\UserProfileUpdateRequest;
@@ -251,15 +252,10 @@ class UserController
       $request = new UserVerificationRequest;
       $request->user_id = $user->user_id;
       $this->vericationService->sendVerificationCode($request);
-      View::render('User/verification', [
-        'title' => 'User verification',
-        'user' => [
-          'id' => $user->user_id,
-          'email' => $user->email,
-          'name' => $user->name,
-        ],
+      Flasher::set([
         'success' => "Code has been sent to <b>{$user->email}</b>, please check your email box!"
       ]);
+      View::redirect('/users/verification');
     } catch (Exception $e) {
       View::render('User/verification', [
         'title' => 'User verification',

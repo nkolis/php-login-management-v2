@@ -10,6 +10,7 @@ use App\PHPLoginManagement\Middleware\MustNotLoginMiddleware;
 use App\PHPLoginManagement\Middleware\MustNotVerifyMiddleware;
 use App\PHPLoginManagement\Middleware\MustVerifyMiddleware;
 
+session_start();
 // Home
 Router::add(method: 'GET', path: '/', controller: HomeController::class, function: 'index', middleware: [MustNotLoginMiddleware::class]);
 

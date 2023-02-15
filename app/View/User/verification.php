@@ -1,6 +1,10 @@
 <?php
 
 use App\PHPLoginManagement\Config\BaseURL;
+use App\PHPLoginManagement\Helper\Flasher;
+
+$message = Flasher::get();
+
 ?>
 <div class="container px-4 py-2">
   <div class="row d-flex align-items-center g-lg-5 py-5 mt-4">
@@ -12,9 +16,9 @@ use App\PHPLoginManagement\Config\BaseURL;
       </p>
     </div>
     <div class="col-sm-8 col-md-6 col-lg-4 mx-auto">
-      <?php if (isset($model['success'])) { ?>
+      <?php if (isset($message['success'])) { ?>
         <div class="alert alert-success alert-dismissible fade show" role="alert">
-          <?= $model['success'] ?>
+          <?= $message['success'] ?>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
       <?php } ?>
