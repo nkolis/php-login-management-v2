@@ -280,6 +280,19 @@ class UserController
   {
     try {
       $response = $this->userService->sendRequestPasswordReset(strip_tags($_POST['email']));
+      $userSessionRequest = new UserSessionRequest;
+      $uuid = Uuid::uuid4();
+      $userSessionRequest->id = $uuid->toString();
+      $userSessionRequest->user_id = $response->id;
+      $this->sessionService->create($userSessionRequest, "PLM-RESET-PASSWORD");
+
+      $userVerificationRequest = new UserVerificationRequest;
+      $userVerificationRequest->user_id = $response->id;
+      $this->vericationService->sendVerificationCode($userVerificationRequest);
+
+      Flasher::set([
+        'success' => "Code has been sent to <b>{$response->email}</b>, please check your email box!"
+      ]);
       View::redirect('/users/password_reset/verify');
     } catch (Exception $e) {
       View::render('User/password_reset', [
@@ -287,5 +300,16 @@ class UserController
         'error' => unserialize($e->getMessage())
       ]);
     }
+  }
+
+  public function passwordResetVerify()
+  {
+    View::render('User/password_reset_verify', [
+      'title' => 'User password',
+    ]);
+  }
+
+  public function postPasswordResetVerify()
+  {
   }
 }

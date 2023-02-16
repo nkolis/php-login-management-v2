@@ -20,7 +20,7 @@ use App\PHPLoginManagement\Config\BaseURL;
       <?php } ?>
       <form class="border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light" action="<?= BaseURL::get() ?>/users/password_reset" method="post">
         <div class="form-floating mb-2 mt-2">
-          <input type="email" class="form-control <?= isset($model['error']['email']) ? 'is-invalid' : '' ?>" placeholder="Email" name="email" id="email" autocomplete="off" />
+          <input type="email" class="form-control <?= isset($model['error']['email']) ? 'is-invalid' : '' ?>" placeholder="Email" name="email" id="email" autocomplete="off" value="<?= $_POST['email'] ?? '' ?>" />
           <label for="email">Email</label>
           <?php if (isset($model['error']['email'])) { ?>
             <div id="email" class="invalid-feedback"><?= $model['error']['email'] ?></div>

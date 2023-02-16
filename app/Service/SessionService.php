@@ -26,7 +26,7 @@ class SessionService
     ];
   }
 
-  public function create(UserSessionRequest $request): ?UserSessionResponse
+  public function create(UserSessionRequest $request, $session_name = "PLM-SESSION"): ?UserSessionResponse
   {
 
     try {
@@ -38,9 +38,9 @@ class SessionService
         $this->sessionRepository->deleteByid($session->id);
       }
 
-      if ($user != null && empty($_COOKIE[self::$COOKIE])) {
+      if ($user != null && empty($_COOKIE[$session_name])) {
         $expire = time() + 60 * 60 * 24 * 7;
-        setcookie(self::$COOKIE, $request->id, $expire, '/');
+        setcookie($session_name, $request->id, $expire, '/');
         $session = new Session();
         $session->id = $request->id;
         $session->user_id = $request->user_id;
@@ -57,17 +57,18 @@ class SessionService
         $response->verification_status = $user->verification_status;
         return $response;
       } else {
-        throw new Exception('Failed create session user not found');
+        throw new Exception(serialize('Failed create session user not found'));
+        return null;
       }
     } catch (\Exception $e) {
       throw $e;
     }
   }
 
-  public function currentSession(): ?UserSessionResponse
+  public function currentSession($session_name = "PLM-SESSION"): ?UserSessionResponse
   {
 
-    $session_id = $_COOKIE[self::$COOKIE] ?? null;
+    $session_id = $_COOKIE[$session_name] ?? null;
     $session = $this->sessionRepository->findById($session_id);
     $this->sessionRepository->deleteExpireSessionByUserId(date('Y-m-d H:i:s', time()), $session->user_id ?? null);
     $user = $this->userRepository->findById($session->user_id ?? null);
@@ -80,16 +81,16 @@ class SessionService
       $response->verification_status = $user->verification_status;
       return $response;
     } else {
-      setcookie(Self::$COOKIE, '', 1, '/');
+      setcookie($session_name, '', 1, '/');
       return null;
     }
   }
 
-  public function destroySession(): void
+  public function destroySession($session_name = "PLM-SESSION"): void
   {
-    $current = $this->currentSession();
+    $current = $this->currentSession($session_name);
     if ($current != null) {
-      setcookie(self::$COOKIE, '', 1, '/');
+      setcookie($session_name, '', 1, '/');
       $this->sessionRepository->deleteByid($current->id);
     }
   }

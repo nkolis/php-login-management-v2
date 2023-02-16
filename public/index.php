@@ -10,7 +10,6 @@ use App\PHPLoginManagement\Middleware\MustNotLoginMiddleware;
 use App\PHPLoginManagement\Middleware\MustNotVerifyMiddleware;
 use App\PHPLoginManagement\Middleware\MustVerifyMiddleware;
 
-session_start();
 // Home
 Router::add(method: 'GET', path: '/', controller: HomeController::class, function: 'index', middleware: [MustNotLoginMiddleware::class]);
 
@@ -42,5 +41,8 @@ Router::add(method: 'GET', path: '/users/logout', controller: UserController::cl
 // User password reset
 Router::add(method: 'GET', path: '/users/password_reset', controller: UserController::class, function: 'passwordReset', middleware: []);
 Router::add(method: 'POST', path: '/users/password_reset', controller: UserController::class, function: 'postPasswordReset', middleware: []);
+Router::add(method: 'GET', path: '/users/password_reset/verify', controller: UserController::class, function: 'passwordResetVerify', middleware: []);
+Router::add(method: 'POST', path: '/users/password_reset/verify', controller: UserController::class, function: 'postPasswordResetVerify', middleware: []);
+
 
 Router::run();
