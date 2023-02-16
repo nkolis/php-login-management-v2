@@ -5,8 +5,6 @@ namespace App\PHPLoginManagement\Config;
 use PDO;
 use PDOException;
 
-require_once __DIR__ . '/conf.php';
-
 class Database
 {
   private static ?PDO $connection = null;
@@ -15,7 +13,7 @@ class Database
   {
     try {
       if (is_null(self::$connection)) {
-        $config = getConfig();
+        $config = DATABASE_CONFIG;
         $host = $config['database'][$mode]['host'];
         $dbname = $config['database'][$mode]['dbname'];
         $dsn = "mysql:host=$host;dbname=$dbname";

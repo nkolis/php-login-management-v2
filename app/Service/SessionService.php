@@ -9,8 +9,6 @@ use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
 use Exception;
 
-use const App\PHPLoginManagement\config\DEFAULT_COOKIE_EXPIRES;
-
 class SessionService
 {
   private UserRepository $userRepository;
