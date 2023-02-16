@@ -115,7 +115,7 @@ class VerificationUserService
         }
       }
     } catch (\Exception $e) {
-      throw $e;
+      throw new Exception(serialize(['error_mailer' => $e->getMessage()]));
     }
   }
 

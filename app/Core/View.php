@@ -17,7 +17,7 @@ class View
 
   public static function redirect($url)
   {
-    header("Location: " . BaseURL::get() . $url);
+    header("Location: " . BASE_URL . $url);
     if (getenv('mode') != 'test') {
       exit();
     }
@@ -26,7 +26,7 @@ class View
   public static function redirectSwal(string $url, string $path,  array $swal, array $model = [])
   {
     self::render($path, $model);
-    $base = BaseURL::get();
+    $base = BASE_URL;
     echo "<script> Swal.fire({
       title: '{$swal['message']}',
       icon: '{$swal['icon']}',
@@ -35,7 +35,7 @@ class View
     }).then(function() {
       location='$base$url'
     });</script>";
-    //header("Location: " . BaseURL::get() . $url);
+    //header("Location: " . BASE_URL . $url);
     if (getenv('mode') != 'test') {
       exit();
     }

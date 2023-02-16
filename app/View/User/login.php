@@ -1,5 +1,9 @@
 <?php
 
+
+
+var_dump(BASE_URL);
+
 use App\PHPLoginManagement\Config\BaseURL;
 ?>
 <div class="container px-4 py-2">
@@ -20,7 +24,7 @@ use App\PHPLoginManagement\Config\BaseURL;
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
       <?php } ?>
-      <form class="border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light" action="<?= BaseURL::get() ?>/users/login" method="post">
+      <form class="border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light" action="<?= BASE_URL ?>/users/login" method="post">
 
         <div class="form-floating mb-2 mt-2">
           <input type="text" class="form-control <?= isset($model['error']['email']) ? 'is-invalid' : '' ?>" placeholder="Email" name="email" id="email" autocomplete="off" value="<?= $_POST['email'] ?? '' ?>" />
@@ -42,11 +46,11 @@ use App\PHPLoginManagement\Config\BaseURL;
         </div>
 
         <div class="text-end mb-3">
-          <a href="<?= BaseURL::get() ?>/users/password_reset">Lupa password?</a>
+          <a href="<?= BASE_URL ?>/users/password_reset">Lupa password?</a>
         </div>
 
         <button class="btn btn-primary w-100 p-2 mb-2" type="submit">Login</button>
-        <span>Belum punya akun? </span> <a href="<?= BaseURL::get() ?>/users/register">Register</a>
+        <span>Belum punya akun? </span> <a href="<?= BASE_URL ?>/users/register">Register</a>
 
 
 

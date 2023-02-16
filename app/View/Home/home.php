@@ -13,8 +13,8 @@ use App\PHPLoginManagement\Config\BaseURL;
     </div>
     <div class="col-sm-8 col-md-6 col-lg-4 mx-auto border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light">
 
-      <a href="<?= BaseURL::get() ?>/users/register" class="btn btn-outline-primary w-100 p-2 mb-2">Register</a>
-      <a href="<?= BaseURL::get() ?>/users/login" class="btn btn-primary w-100 p-2">Login</a>
+      <a href="<?= BASE_URL ?>/users/register" class="btn btn-outline-primary w-100 p-2 mb-2">Register</a>
+      <a href="<?= BASE_URL ?>/users/login" class="btn btn-primary w-100 p-2">Login</a>
     </div>
   </div>
 </div>

@@ -10,13 +10,14 @@
     "autoload": {
       "psr-4": {
           "App\\PHPLoginManagement\\": "app"
-      }
+      },
+      "files": [ "config/constants.php" ]
     },
     "autoload-dev": {
       "psr-4": {
           "App\\PHPLoginManagement\\": "tests"
-      }
-   
+      },
+      "files": [ "config/constants.php" ]
     },
     "require": {
       "php": ">=8",

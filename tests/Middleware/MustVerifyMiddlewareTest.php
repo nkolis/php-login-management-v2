@@ -57,7 +57,7 @@ class MustVerifyMiddlewareTest extends TestCase
 
 
     $this->middleware->before();
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
     $this->expectOutputRegex("[Please verify your account!]");
   }
 }

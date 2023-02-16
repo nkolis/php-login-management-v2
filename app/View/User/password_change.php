@@ -11,7 +11,7 @@ use App\PHPLoginManagement\Config\BaseURL;
         Programming Languange :)
       </p>
     </div>
-    <form class="col-sm-8 col-md-6 col-lg-4 mx-auto border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light" action="<?= BaseURL::get() ?>/users/password" method="post">
+    <form class="col-sm-8 col-md-6 col-lg-4 mx-auto border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light" action="<?= BASE_URL ?>/users/password" method="post">
       <div class="form-floating mb-2 mt-2">
         <input type="email" class="form-control" placeholder="Email" name="email" id="email" autocomplete="off" disabled value="<?= $model['user']['email'] ?? $_POST['email'] ?>" />
         <label for="email">Email</label>

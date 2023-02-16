@@ -47,7 +47,7 @@ class RouterTest extends TestCase
     $_SERVER['REQUEST_METHOD'] = 'GET';
     Router::add(method: 'GET', path: $path, controller: UserController::class, function: 'dashboard', middleware: [MustLoginMiddleware::class]);
     Router::run();
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
     $this->expectOutputRegex("[Location: $baseurl/users/login]");
   }
 }

@@ -76,7 +76,7 @@ class UserControllerTest extends TestCase
     self::assertEquals($_POST['email'], $result->email);
     self::assertEquals($_POST['name'], $result->name);
     self::assertTrue(password_verify($_POST['password'], $result->password));
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
     $this->expectOutputRegex("[Location: $baseurl/users/login]");
   }
 
@@ -163,7 +163,7 @@ class UserControllerTest extends TestCase
 
     $this->userController->postRegister();
     $this->userController->postLogin();
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
     $this->expectOutputRegex("[User login]");
     $this->expectOutputRegex("[Login Success]");
   }
@@ -251,7 +251,7 @@ class UserControllerTest extends TestCase
     $_POST['email'] = 'setiawan@gmail.com';
     $_POST['name'] = 'kholis setiawan';
     $this->userController->postUpdateProfile();
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
     $this->expectOutputRegex("[Location: $baseurl/users/dashboard]");
   }
 
@@ -343,7 +343,7 @@ class UserControllerTest extends TestCase
     $_POST['oldPassword'] = 'rahasia';
     $_POST['newPassword'] = '123';
     $this->userController->postUpdatePassword();
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
     $this->expectOutputRegex("[Location: $baseurl/users/dashboard]");
   }
 
@@ -389,7 +389,7 @@ class UserControllerTest extends TestCase
     $_POST['oldPassword'] = 'salah';
     $_POST['newPassword'] = '123';
     $this->userController->postUpdatePassword();
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
     $this->expectOutputRegex("[User password]");
     $this->expectOutputRegex("[Old password is wrong]");
   }
@@ -557,7 +557,7 @@ class UserControllerTest extends TestCase
 
     $_COOKIE[SessionService::$COOKIE] = $request->id;
     $this->userController->postSendcode();
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
     $this->expectOutputRegex("[Location: $baseurl/users/verification]");
   }
 
@@ -585,7 +585,7 @@ class UserControllerTest extends TestCase
     $this->userRepository->save($user);
     $_POST['email'] = $user->email;
     $this->userController->postPasswordReset();
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
 
 
     $request = new UserSessionRequest();
@@ -715,7 +715,7 @@ class UserControllerTest extends TestCase
     $this->verificationRepository->save($user_verification);
     $_POST['code'] = '123456';
     $this->userController->postPasswordResetVerify();
-    $baseurl = BaseURL::get();
+    $baseurl = BASE_URL;
     $this->expectOutputRegex("[Location: $baseurl/users/password_reset/change]");
   }
 

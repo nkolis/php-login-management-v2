@@ -17,15 +17,15 @@ use App\PHPLoginManagement\Config\BaseURL;
       <?php if (isset($model['user']['verification_status']) && $model['user']['verification_status'] == 'unverified') { ?>
         <div class="alert alert-warning" role="alert">
           <strong>Warning!</strong><br>
-          Please verify your account! <a href="<?= BaseURL::get() ?>/users/verification"> Click here</a>
+          Please verify your account! <a href="<?= BASE_URL ?>/users/verification"> Click here</a>
 
         </div>
       <?php } ?>
       <div class="border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light">
 
-        <a href="<?= BaseURL::get() ?>/users/profile" class="btn btn-outline-primary w-100 p-2 mb-2">Profile</a>
-        <a href="<?= BaseURL::get() ?>/users/password" class="btn btn-primary w-100 p-2 mb-2">Password</a>
-        <a href="<?= BaseURL::get() ?>/users/logout" class="btn btn-danger w-100 p-2">Logout</a>
+        <a href="<?= BASE_URL ?>/users/profile" class="btn btn-outline-primary w-100 p-2 mb-2">Profile</a>
+        <a href="<?= BASE_URL ?>/users/password" class="btn btn-primary w-100 p-2 mb-2">Password</a>
+        <a href="<?= BASE_URL ?>/users/logout" class="btn btn-danger w-100 p-2">Logout</a>
       </div>
     </div>
   </div>

@@ -8,6 +8,6 @@ class BaseURLTest extends TestCase
 {
   public function testGetBaseURL()
   {
-    self::assertEquals(BaseURL::get(), 'http://localhost/php-login-management-v2/public');
+    self::assertEquals(BASE_URL, 'http://localhost/php-login-management-v2/public');
   }
 }

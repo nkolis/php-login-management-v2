@@ -9,6 +9,8 @@ use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
 use Exception;
 
+use const App\PHPLoginManagement\config\DEFAULT_COOKIE_EXPIRES;
+
 class SessionService
 {
   private UserRepository $userRepository;
@@ -26,7 +28,7 @@ class SessionService
     ];
   }
 
-  public function create(UserSessionRequest $request, $session_name = "PLM-SESSION"): ?UserSessionResponse
+  public function create(UserSessionRequest $request, $session_name = "PLM-SESSION", $expire = DEFAULT_COOKIE_EXPIRES): ?UserSessionResponse
   {
 
     try {
@@ -39,7 +41,7 @@ class SessionService
       }
 
       if ($user != null && empty($_COOKIE[$session_name])) {
-        $expire = time() + 60 * 60 * 24 * 7;
+        $expire = time() + $expire;
         setcookie($session_name, $request->id, $expire, '/');
         $session = new Session();
         $session->id = $request->id;

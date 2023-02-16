@@ -30,7 +30,7 @@ $message = Flasher::get();
       <?php } ?>
       <div class="border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light">
 
-        <form class="mb-2" action="<?= BaseURL::get() ?>/users/verification" method="post">
+        <form class="mb-2" action="<?= BASE_URL ?>/users/verification" method="post">
           <div class="form-floating mb-2 mt-2">
             <input type="email" class="form-control" placeholder="Email" name="email" id="email" autocomplete="off" value="<?= $model['user']['email'] ?? '' ?>" disabled />
             <label for="email">Email</label>
@@ -50,7 +50,7 @@ $message = Flasher::get();
           </div>
           <button class="btn btn-primary w-100 p-2" type="submit">Verify</button>
         </form>
-        <form action="<?= BaseURL::get() ?>/users/verification/sendcode" method="post">
+        <form action="<?= BASE_URL ?>/users/verification/sendcode" method="post">
           <button class="btn btn-outline-success w-100 p-2" type="submit">Send code</button>
         </form>
       </div>

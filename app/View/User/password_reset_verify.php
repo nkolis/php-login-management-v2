@@ -31,7 +31,7 @@ $message = Flasher::get();
       <?php } ?>
       <div class="border border-2 border-secondary border-opacity-10 rounded-3 p-5 bg-light">
 
-        <form class="mb-2" action="<?= BaseURL::get() ?>/users/password_reset/verify" method="post">
+        <form class="mb-2" action="<?= BASE_URL ?>/users/password_reset/verify" method="post">
 
           <div class="form-floating mb-2">
             <input type="text" class="form-control <?= isset($model['error']['code']) ? 'is-invalid' : '' ?>" placeholder="Enter code here" name="code" id="code" />

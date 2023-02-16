@@ -60,7 +60,7 @@ namespace App\PHPLoginManagement\Middleware {
 
 
       $this->middleware->before();
-      $baseurl = BaseURL::get();
+      $baseurl = BASE_URL;
       $this->expectOutputRegex("[Location: $baseurl/users/dashboard]");
     }
   }

@@ -107,7 +107,7 @@ class UserController
           'icon' => 'success',
           'title' => 'Login Success',
           'timer' => 1000,
-          'redirect-url' => BaseURL::get() . '/users/dashboard'
+          'redirect-url' => BASE_URL . '/users/dashboard'
         ])
       ]);
     } catch (ValidateException $e) {
@@ -229,7 +229,7 @@ class UserController
           'icon' => 'success',
           'title' => 'Verification Success',
           'timer' => 1000,
-          'redirect-url' => BaseURL::get() . '/users/dashboard'
+          'redirect-url' => BASE_URL . '/users/dashboard'
         ])
       ]);
     } catch (Exception $e) {

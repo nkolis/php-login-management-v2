@@ -35,7 +35,7 @@ class MustVerifyMiddleware implements Middleware
           'icon' => 'warning',
           'title' => 'Please verify your account!',
           'showConfirmButton' => true,
-          'redirect-url' => BaseURL::get() . '/users/dashboard'
+          'redirect-url' => BASE_URL . '/users/dashboard'
         ])
       ]);
     }

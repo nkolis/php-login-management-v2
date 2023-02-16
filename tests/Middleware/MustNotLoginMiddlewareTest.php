@@ -66,7 +66,7 @@ namespace App\PHPLoginManagement\Middleware {
       $_COOKIE[SessionService::$COOKIE] = $requesSession->id;
 
       $this->middleware->before();
-      $baseurl = BaseURL::get();
+      $baseurl = BASE_URL;
       $this->expectOutputRegex("[Location: $baseurl/users/dashboard]");
     }
   }
