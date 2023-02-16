@@ -11,6 +11,7 @@ use App\PHPLoginManagement\Entity\User;
 use App\PHPLoginManagement\Entity\VerificationUser;
 use App\PHPLoginManagement\Helper\Flasher;
 use App\PHPLoginManagement\Model\UserSessionRequest;
+use App\PHPLoginManagement\Model\UserVerificationRequest;
 use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
 use App\PHPLoginManagement\Repository\VerificationUserRepository;
@@ -629,12 +630,93 @@ class UserControllerTest extends TestCase
     $this->sessionService->create($request, "PLM-RESET-PASSWORD");
     $_COOKIE["PLM-RESET-PASSWORD"] = $request->id;
     $this->userController->PasswordResetVerify();
-
-
-
     $session = $this->sessionService->currentSession("PLM-RESET-PASSWORD");
-
     $this->expectOutputRegex("[Code has been sent to <b>{$session->email}</b>, please check your email box!]");
+  }
+
+  public function testPostPasswordResetVerifyEmptyCode()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis010@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+    $_POST['email'] = $user->email;
+
+    Flasher::set([
+      'success' => "Code has been sent to <b>{$user->email}</b>, please check your email box!"
+    ]);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request, "PLM-RESET-PASSWORD");
+    $_COOKIE["PLM-RESET-PASSWORD"] = $request->id;
+    $_POST['code'] = null;
+    $this->userController->postPasswordResetVerify();
+    $this->expectOutputRegex("[Code can't be empty]");
+  }
+
+  public function testPostPasswordResetVerifyIncorrectCode()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis010@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+    $_POST['email'] = $user->email;
+
+    Flasher::set([
+      'success' => "Code has been sent to <b>{$user->email}</b>, please check your email box!"
+    ]);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request, "PLM-RESET-PASSWORD");
+    $_COOKIE["PLM-RESET-PASSWORD"] = $request->id;
+
+    $user_verification = new VerificationUser;
+    $user_verification->user_id = $user->id;
+    $user_verification->code = '123456';
+
+    $this->verificationRepository->save($user_verification);
+    $_POST['code'] = 'salah';
+    $this->userController->postPasswordResetVerify();
+    $this->expectOutputRegex("[Incorrect code verification]");
+  }
+
+  public function testPostPasswordResetVerifySuccess()
+  {
+    $user = new User;
+    $user->id = $this->uuid();
+    $user->email = 'nurkholis010@gmail.com';
+    $user->name = 'kholis';
+    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+    $this->userRepository->save($user);
+    $_POST['email'] = $user->email;
+
+    Flasher::set([
+      'success' => "Code has been sent to <b>{$user->email}</b>, please check your email box!"
+    ]);
+
+    $request = new UserSessionRequest();
+    $request->id = $this->uuid();
+    $request->user_id = $user->id;
+    $this->sessionService->create($request, "PLM-RESET-PASSWORD");
+    $_COOKIE["PLM-RESET-PASSWORD"] = $request->id;
+
+    $user_verification = new VerificationUser;
+    $user_verification->user_id = $user->id;
+    $user_verification->code = '123456';
+
+    $this->verificationRepository->save($user_verification);
+    $_POST['code'] = '123456';
+    $this->userController->postPasswordResetVerify();
+    $baseurl = BaseURL::get();
+    $this->expectOutputRegex("[Location: $baseurl/users/password_reset/change]");
   }
 
 

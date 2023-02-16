@@ -160,6 +160,7 @@ class UserService
     }
   }
 
+
   private function validatePasswordReset($value)
   {
     if (trim($value) == '' || $value == null) {

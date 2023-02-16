@@ -2,7 +2,7 @@
 
 namespace App\PHPLoginManagement\Service;
 
-
+use App\PHPLoginManagement\Entity\User;
 use App\PHPLoginManagement\Entity\VerificationUser;
 use App\PHPLoginManagement\Exception\ValidateException;
 use App\PHPLoginManagement\Lib\Mailer;
@@ -131,6 +131,26 @@ class VerificationUserService
         $user = $this->userRepository->findById($request->user_id);
         $user->verification_status = "verified";
         $this->userRepository->update($user);
+        $this->verificationUserRepository->deleteByUserid($request->user_id);
+      } else {
+        throw new Exception(serialize(["verification" => "Incorrect code verification"]));
+      }
+    } catch (Exception $e) {
+      throw $e;
+    }
+  }
+
+
+  public function verifyRequestPasswordReset(UserVerificationRequest $request): User
+  {
+    $this->validateVerifyRequest($request);
+    try {
+
+      $user_verification = $this->currentCodeVerification($request->user_id);
+
+      if ($user_verification->code == $request->code) {
+        $user = $this->userRepository->findById($request->user_id);
+        return $user;
         $this->verificationUserRepository->deleteByUserid($request->user_id);
       } else {
         throw new Exception(serialize(["verification" => "Incorrect code verification"]));
