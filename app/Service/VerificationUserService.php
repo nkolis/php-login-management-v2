@@ -52,7 +52,7 @@ class VerificationUserService
   }
 
 
-  public function currentCodeVerification(string $user_id): VerificationUser
+  public function currentCodeVerification(?string $user_id): ?VerificationUser
   {
     try {
       $datenow = time();
@@ -62,6 +62,7 @@ class VerificationUserService
 
       if ($verification_user == null) {
         throw new \Exception(serialize(["verification" => "Please send code and check your mail box!"]));
+        return null;
       }
 
       $created_at = new DateTime($verification_user->created_at);
@@ -84,11 +85,13 @@ class VerificationUserService
 
       if ($codeExpire) {
         throw new \Exception(serialize(["verification" => "Your code verification is expired, send code again!"]));
+        return null;
       }
 
       return $verification_user;
     } catch (\Exception $e) {
       throw $e;
+      return null;
     }
   }
 
@@ -150,8 +153,8 @@ class VerificationUserService
 
       if ($user_verification->code == $request->code) {
         $user = $this->userRepository->findById($request->user_id);
-        return $user;
         $this->verificationUserRepository->deleteByUserid($request->user_id);
+        return $user;
       } else {
         throw new Exception(serialize(["verification" => "Incorrect code verification"]));
       }

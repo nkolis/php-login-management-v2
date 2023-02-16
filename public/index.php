@@ -8,7 +8,9 @@ use App\PHPLoginManagement\Core\Router;
 use App\PHPLoginManagement\Middleware\MustLoginMiddleware;
 use App\PHPLoginManagement\Middleware\MustNotLoginMiddleware;
 use App\PHPLoginManagement\Middleware\MustNotVerifyMiddleware;
+use App\PHPLoginManagement\Middleware\MustNotVerifyPasswordMiddleware;
 use App\PHPLoginManagement\Middleware\MustVerifyMiddleware;
+use App\PHPLoginManagement\Middleware\MustVerifyPasswordMiddleware;
 
 // Home
 Router::add(method: 'GET', path: '/', controller: HomeController::class, function: 'index', middleware: [MustNotLoginMiddleware::class]);
@@ -39,12 +41,12 @@ Router::add(method: 'POST', path: '/users/verification/sendcode', controller: Us
 Router::add(method: 'GET', path: '/users/logout', controller: UserController::class, function: 'logout', middleware: [MustLoginMiddleware::class]);
 
 // User password reset
-Router::add(method: 'GET', path: '/users/password_reset', controller: UserController::class, function: 'passwordReset', middleware: []);
-Router::add(method: 'POST', path: '/users/password_reset', controller: UserController::class, function: 'postPasswordReset', middleware: []);
-Router::add(method: 'GET', path: '/users/password_reset/verify', controller: UserController::class, function: 'passwordResetVerify', middleware: []);
-Router::add(method: 'POST', path: '/users/password_reset/verify', controller: UserController::class, function: 'postPasswordResetVerify', middleware: []);
-Router::add(method: 'GET', path: '/users/password_reset/change', controller: UserController::class, function: 'passwordChange', middleware: []);
-Router::add(method: 'POST', path: '/users/password_reset/change', controller: UserController::class, function: 'postPasswordChange', middleware: []);
+Router::add(method: 'GET', path: '/users/password_reset', controller: UserController::class, function: 'passwordReset', middleware: [MustNotVerifyPasswordMiddleware::class]);
+Router::add(method: 'POST', path: '/users/password_reset', controller: UserController::class, function: 'postPasswordReset', middleware: [MustNotVerifyPasswordMiddleware::class]);
+Router::add(method: 'GET', path: '/users/password_reset/verify', controller: UserController::class, function: 'passwordResetVerify', middleware: [MustVerifyPasswordMiddleware::class]);
+Router::add(method: 'POST', path: '/users/password_reset/verify', controller: UserController::class, function: 'postPasswordResetVerify', middleware: [MustVerifyPasswordMiddleware::class]);
+Router::add(method: 'GET', path: '/users/password_reset/change', controller: UserController::class, function: 'passwordChange', middleware: [MustVerifyPasswordMiddleware::class]);
+Router::add(method: 'POST', path: '/users/password_reset/change', controller: UserController::class, function: 'postPasswordChange', middleware: [MustVerifyPasswordMiddleware::class]);
 
 
 Router::run();

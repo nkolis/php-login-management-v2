@@ -292,7 +292,7 @@ class UserController
       Flasher::set([
         'success' => "Code has been sent to <b>{$response->email}</b>, please check your email box!"
       ]);
-      $this->sessionService->create($userSessionRequest, "PLM-RESET-PASSWORD");
+      $this->sessionService->create($userSessionRequest, "PLM-RESET-PASSWORD", 60 * 10);
       View::redirect('/users/password_reset/verify');
     } catch (Exception $e) {
       View::render('User/password_reset', [
