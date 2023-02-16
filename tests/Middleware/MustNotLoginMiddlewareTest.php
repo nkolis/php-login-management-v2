@@ -4,7 +4,7 @@ namespace App\PHPLoginManagement\Middleware {
 
   require_once __DIR__ . '/../Helper/helper.php';
 
-  use App\PHPLoginManagement\Config\BaseURL;
+
   use App\PHPLoginManagement\Config\Database;
   use App\PHPLoginManagement\Entity\User;
   use App\PHPLoginManagement\Model\UserSessionRequest;

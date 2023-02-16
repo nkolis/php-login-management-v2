@@ -1,6 +1,6 @@
 <?php
 
-use App\PHPLoginManagement\Config\BaseURL;
+
 use App\PHPLoginManagement\Helper\Flasher;
 
 $message = Flasher::get();

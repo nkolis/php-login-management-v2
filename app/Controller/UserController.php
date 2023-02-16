@@ -2,7 +2,7 @@
 
 namespace App\PHPLoginManagement\Controller;
 
-use App\PHPLoginManagement\Config\BaseURL;
+
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Core\View;
 use App\PHPLoginManagement\Exception\ValidateException;

@@ -1,6 +1,6 @@
 <?php
 
-use App\PHPLoginManagement\Config\BaseURL;
+
 
 ?>
 <div class="container px-4 py-2">

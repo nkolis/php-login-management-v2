@@ -3,7 +3,7 @@
 namespace App\PHPLoginManagement\Middleware;
 
 use PHPUnit\Framework\TestCase;
-use App\PHPLoginManagement\Config\BaseURL;
+
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Entity\User;
 use App\PHPLoginManagement\Entity\VerificationUser;

@@ -4,7 +4,7 @@ namespace App\PHPLoginManagement\Core;
 
 require_once __DIR__ . '/../Helper/helper.php';
 
-use App\PHPLoginManagement\Config\BaseURL;
+
 use App\PHPLoginManagement\Controller\HomeController;
 use App\PHPLoginManagement\Controller\UserController;
 use App\PHPLoginManagement\Middleware\MustLoginMiddleware;

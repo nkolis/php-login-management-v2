@@ -1,11 +1,3 @@
-<?php
-
-
-
-var_dump(BASE_URL);
-
-use App\PHPLoginManagement\Config\BaseURL;
-?>
 <div class="container px-4 py-2">
   <div class="row d-flex align-items-center g-lg-5 py-5 mt-4">
     <div class="col-md-6 col-lg-8 d-flex text-lg-start text-center flex-column">

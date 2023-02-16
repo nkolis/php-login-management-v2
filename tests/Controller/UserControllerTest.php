@@ -5,7 +5,7 @@ namespace App\PHPLoginManagement\Controller;
 
 
 
-use App\PHPLoginManagement\Config\BaseURL;
+
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Entity\User;
 use App\PHPLoginManagement\Entity\VerificationUser;

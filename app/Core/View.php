@@ -2,7 +2,7 @@
 
 namespace App\PHPLoginManagement\Core;
 
-use App\PHPLoginManagement\Config\BaseURL;
+
 
 class View
 {
