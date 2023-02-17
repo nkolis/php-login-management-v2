@@ -6,7 +6,6 @@ use PHPUnit\Framework\TestCase;
 
 use App\PHPLoginManagement\Config\Database;
 use App\PHPLoginManagement\Entity\User;
-use App\PHPLoginManagement\Entity\VerificationUser;
 use App\PHPLoginManagement\Model\UserSessionRequest;
 use App\PHPLoginManagement\Repository\SessionRepository;
 use App\PHPLoginManagement\Repository\UserRepository;
