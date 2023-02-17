@@ -1,6 +1,8 @@
 <?php
 
+use App\PHPLoginManagement\Helper\Flasher;
 
+$message = Flasher::get();
 ?>
 <div class="container px-4 py-2">
   <div class="row d-flex align-items-center g-lg-5 py-5 mt-4">
@@ -21,14 +23,14 @@
         <input type="text" class="form-control" placeholder="Name" name="name" id="name" disabled value="<?= $model['user']['name'] ?? $_POST['name'] ?>" />
         <label for="name">Name</label>
       </div>
-      <div class="input-group mb-2 <?= isset($model['error']['newPassword']) ? 'has-validation' : '' ?>">
+      <div class="input-group mb-2 <?= isset($message['newPassword']) ? 'has-validation' : '' ?>">
         <div class="form-floating">
-          <input type="password" class="form-control <?= isset($model['error']['newPassword']) ? 'is-invalid' : '' ?>" placeholder="New Password" name="newPassword" id="newPassword" />
+          <input type="password" class="form-control <?= isset($message['newPassword']) ? 'is-invalid' : '' ?>" placeholder="New Password" name="newPassword" id="newPassword" />
           <label for="newPassword">New Password</label>
         </div>
         <button type="button" class="input-group-text bg-transparent" id="toggle-password"><i class="bi bi-eye-slash"></i></button>
-        <?php if (isset($model['error']['newPassword'])) { ?>
-          <div id="newPassword" class="invalid-feedback d-block"><?= $model['error']['newPassword'] ?></div>
+        <?php if (isset($message['newPassword'])) { ?>
+          <div id="newPassword" class="invalid-feedback d-block"><?= $message['newPassword'] ?></div>
         <?php } ?>
       </div>
       <button class="btn btn-primary w-100 p-2 mb-2" type="submit">Change Password</button>

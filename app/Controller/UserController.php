@@ -365,6 +365,30 @@ class UserController
 
   public function postPasswordChange()
   {
+    try {
+
+      $user = $this->sessionService->currentSession('PLM-RESET-PASSWORD');
+      $request = new UserPasswordUpdateRequest;
+      $request->user_id = $user->user_id;
+      $request->newPassword = strip_tags($_POST['newPassword']);
+      $this->userService->sendRequestPasswordChange($request);
+      View::render('User/password_change', [
+        'title' => 'User password',
+        'user' => [
+          "email" => $user->email ?? '',
+          "name" => $user->name ?? '',
+        ],
+        'swal' => json_encode([
+          'icon' => 'success',
+          'title' => 'Update Password Success',
+          'timer' => 1000,
+          'redirect-url' => BASE_URL . '/users/login'
+        ])
+      ]);
+    } catch (Exception $e) {
+      Flasher::set(unserialize($e->getMessage()));
+      View::redirect('/users/password_reset/change');
+    }
   }
 
   public function cancelPasswordReset()

@@ -160,6 +160,26 @@ class UserService
     }
   }
 
+  public function sendRequestPasswordChange(UserPasswordUpdateRequest $request): ?UserPasswordUpdateResponse
+  {
+    if (trim($request->newPassword) == '' || $request->newPassword == null) {
+      throw new Exception(serialize(["newPassword" => "New password can't be empty"]));
+    }
+
+    $user = $this->userRepository->findById($request->user_id);
+
+    if ($user == null) {
+      return null;
+    }
+    $user->password = password_hash($request->newPassword, PASSWORD_BCRYPT);
+
+    $this->userRepository->update($user);
+
+    $response = new UserPasswordUpdateResponse;
+    $response->user = $user;
+    return $response;
+  }
+
 
   private function validatePasswordReset($value)
   {
