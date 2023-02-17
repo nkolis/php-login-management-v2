@@ -43,7 +43,8 @@ $message = Flasher::get();
           <button class="btn btn-primary w-100 p-2" type="submit">Verify</button>
         </form>
         <form action="<?= BASE_URL ?>/users/password_reset/verify/sendcodeagain" method="post">
-          <button class="btn btn-outline-success w-100 p-2" type="submit">Send code again</button>
+          <button class="btn btn-outline-success w-100 p-2 mb-2" type="submit">Send code again</button>
+          <a class="btn btn-danger w-100 p-2" href="<?= BASE_URL ?>/users/password_reset/cancel">Cancel</a>
         </form>
       </div>
     </div>

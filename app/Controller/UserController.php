@@ -363,6 +363,10 @@ class UserController
     ]);
   }
 
+  public function postPasswordChange()
+  {
+  }
+
   public function cancelPasswordReset()
   {
     $this->sessionService->destroySession("PLM-RESET-PASSWORD");

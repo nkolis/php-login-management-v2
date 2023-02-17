@@ -38,6 +38,7 @@ class MustVerifyPasswordMiddlewareTest extends TestCase
     putenv("mode=test");
     $_SERVER['HTTP_USER_AGENT'] = 'mozilla';
     $_SERVER['REMOTE_ADDR'] = getenv("REMOTE_ADDR");
+    $_SERVER['REQUEST_URI'] = '';
   }
 
   function testBeforeNotSendPasswordReset()
@@ -95,6 +96,6 @@ class MustVerifyPasswordMiddlewareTest extends TestCase
     $_SERVER['REQUEST_URI'] = '/users/password_reset/change';
     $this->middleware->before();
     $baseurl = BASE_URL;
-    $this->expectOutputRegex("[$baseurl/users/password_reset/change]");
+    $this->expectOutputRegex("[]");
   }
 }

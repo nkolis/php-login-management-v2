@@ -28,22 +28,20 @@ class MustVerifyPasswordMiddleware implements Middleware
 
   public function before(): void
   {
+    $url = $_SERVER['REQUEST_URI'];
     try {
 
       $current = $this->sessionService->currentSession("PLM-RESET-PASSWORD");
       if ($current == null) {
         View::redirect('/users/password_reset');
       }
-      $this->verificationService->currentCodeVerification($current->user_id ?? null);
+      $verification_user = $this->verificationService->currentCodeVerification($current->user_id ?? null);
+      if ($verification_user != null && $url == '/php-login-management-v2/public/users/password_reset/change') {
+        View::redirect('/users/password_reset/verify');
+      }
     } catch (Exception) {
-      if ($current != null) {
-        $url = $_SERVER['REQUEST_URI'];
-        if ($url == '/php-login-management-v2/public/users/password_reset/cancel') {
-          View::redirect('/users/login');
-        }
-        if ($url != '/php-login-management-v2/public/users/password_reset/change') {
-          View::redirect('/users/password_reset/change');
-        }
+      if ($url == '/php-login-management-v2/public/users/password_reset/verify') {
+        View::redirect('/users/password_reset/change');
       }
     }
   }
