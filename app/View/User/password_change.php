@@ -31,7 +31,8 @@
           <div id="newPassword" class="invalid-feedback d-block"><?= $model['error']['newPassword'] ?></div>
         <?php } ?>
       </div>
-      <button class="btn btn-primary w-100 p-2" type="submit">Change Password</button>
+      <button class="btn btn-primary w-100 p-2 mb-2" type="submit">Change Password</button>
+      <a class="btn btn-danger w-100 p-2" href="<?= BASE_URL ?>/users/password_reset/cancel">Cancel</a>
     </form>
   </div>
 </div>

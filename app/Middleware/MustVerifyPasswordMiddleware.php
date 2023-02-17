@@ -36,10 +36,14 @@ class MustVerifyPasswordMiddleware implements Middleware
       }
       $this->verificationService->currentCodeVerification($current->user_id ?? null);
     } catch (Exception) {
-
-
-      if ($current != null && $_SERVER['REQUEST_URI'] != '/php-login-management-v2/public/users/password_reset/change') {
-        View::redirect('/users/password_reset/change');
+      if ($current != null) {
+        $url = $_SERVER['REQUEST_URI'];
+        if ($url == '/php-login-management-v2/public/users/password_reset/cancel') {
+          View::redirect('/users/login');
+        }
+        if ($url != '/php-login-management-v2/public/users/password_reset/change') {
+          View::redirect('/users/password_reset/change');
+        }
       }
     }
   }

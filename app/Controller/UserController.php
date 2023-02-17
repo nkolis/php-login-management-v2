@@ -326,6 +326,31 @@ class UserController
     }
   }
 
+  public function postSendCodePasswordReset()
+  {
+    try {
+      $user = $this->sessionService->currentSession("PLM-RESET-PASSWORD");
+      var_dump($user);
+      $request = new UserVerificationRequest;
+      $request->user_id = $user->user_id;
+      $this->vericationService->sendVerificationCode($request);
+      Flasher::set([
+        'success' => "Code has been sent to <b>{$user->email}</b>, please check your email box!"
+      ]);
+      View::redirect('/users/password_reset/verify');
+    } catch (Exception $e) {
+      View::render('User/password_reset_verify', [
+        'title' => 'Password reset',
+        'user' => [
+          'id' => $user->user_id,
+          'email' => $user->email,
+          'name' => $user->name,
+        ],
+        'error' => ["verification" => $e->getMessage()]
+      ]);
+    }
+  }
+
   public function passwordChange()
   {
     $user = $this->sessionService->currentSession("PLM-RESET-PASSWORD");
@@ -336,5 +361,11 @@ class UserController
         "name" => $user->name ?? '',
       ]
     ]);
+  }
+
+  public function cancelPasswordReset()
+  {
+    $this->sessionService->destroySession("PLM-RESET-PASSWORD");
+    View::redirect('/users/login');
   }
 }
