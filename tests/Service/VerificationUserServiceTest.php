@@ -55,7 +55,7 @@ class VerificationUserServiceTest extends TestCase
     self::assertEquals(6, strlen($result));
   }
 
-  public function testGenerateCodeVericationSaveSuccess()
+  public function testGenerateCodeVerificationSaveSuccess()
   {
     $user = new User;
     $user->id = Uuid::uuid4()->toString();
@@ -75,7 +75,7 @@ class VerificationUserServiceTest extends TestCase
     $this->assertNull($result->updated_at);
   }
 
-  public function testGenerateCodeVericationUpdateSuccess()
+  public function testGenerateCodeVerificationUpdateSuccess()
   {
     $user = new User;
     $user->id = Uuid::uuid4()->toString();
