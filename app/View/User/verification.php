@@ -51,8 +51,9 @@ $message = Flasher::get();
           <button class="btn btn-primary w-100 p-2" type="submit">Verify</button>
         </form>
         <form action="<?= BASE_URL ?>/users/verification/sendcode" method="post">
-          <button class="btn btn-outline-success w-100 p-2" type="submit">Send code</button>
+          <button class="btn btn-outline-success w-100 p-2 mb-2" type="submit">Send code</button>
         </form>
+        <a class="btn btn-danger w-100 p-2" href="<?= BASE_URL ?>/users/dashboard">Cancel</a>
       </div>
     </div>
   </div>

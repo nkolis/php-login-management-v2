@@ -16,7 +16,7 @@
 
       </div>
       <div class="form-floating mb-2">
-        <input type="text" class="form-control <?= isset($model['error']['name']) ? 'is-invalid' : '' ?>" placeholder="Name" name="name" id="name" value="<?= $model['user']['name'] ?? $_POST['name'] ?>" />
+        <input type="text" class="form-control <?= isset($model['error']['name']) ? 'is-invalid' : '' ?>" placeholder="Name" name="name" id="name" value="<?= $model['user']['name'] ?? $_POST['name'] ?>" autocomplete="off" />
         <label for="name">Name</label>
         <?php if (isset($model['error']['name'])) { ?>
           <div id="name" class="invalid-feedback"><?= $model['error']['name'] ?></div>
