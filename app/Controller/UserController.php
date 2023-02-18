@@ -372,6 +372,7 @@ class UserController
       $request->user_id = $user->user_id;
       $request->newPassword = strip_tags($_POST['newPassword']);
       $this->userService->sendRequestPasswordChange($request);
+      $this->sessionService->destroySession("PLM-RESET-PASSWORD");
       View::render('User/password_change', [
         'title' => 'User password',
         'user' => [
