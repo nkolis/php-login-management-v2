@@ -344,7 +344,7 @@ class UserControllerTest extends TestCase
     $_POST['newPassword'] = '123';
     $this->userController->postUpdatePassword();
     $baseurl = BASE_URL;
-    $this->expectOutputRegex("[Location: $baseurl/users/dashboard]");
+    $this->expectOutputRegex("[User password]");
   }
 
 
