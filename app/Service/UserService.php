@@ -104,11 +104,8 @@ class UserService
     $logger = new Logger(UserService::class);
     $logger->pushHandler(new StreamHandler(__DIR__ . '/../../app.log', Level::Info));
     try {
-
       $user = $this->userRepository->findByEmail($request->email);
-
       if (password_verify($request->password, $user->password ?? null)) {
-
         $logger->pushProcessor(new MemoryUsageProcessor());
         $logger->pushProcessor(function ($record) {
           $record['extra'] = [
@@ -120,7 +117,6 @@ class UserService
           'email' => $user->email,
           'name' => $user->name
         ]]);
-
         $response = new UserLoginResponse;
         $response->user = $user;
         return $response;
@@ -128,7 +124,6 @@ class UserService
         throw new ValidateException(serialize(["error_login" => "Incorrect email or password"]));
       }
     } catch (Exception $e) {
-
       $logger->pushProcessor(new MemoryUsageProcessor());
       $logger->pushProcessor(function ($record) {
         $record['extra'] = [
