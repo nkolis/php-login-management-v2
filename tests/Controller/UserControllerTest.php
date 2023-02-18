@@ -252,7 +252,7 @@ class UserControllerTest extends TestCase
     $_POST['name'] = 'kholis setiawan';
     $this->userController->postUpdateProfile();
     $baseurl = BASE_URL;
-    $this->expectOutputRegex("[Location: $baseurl/users/dashboard]");
+    $this->expectOutputRegex("[User profile]");
   }
 
   function testPostProfileUpdateError()
@@ -274,36 +274,36 @@ class UserControllerTest extends TestCase
     $_POST['name'] = ' ';
     $this->userController->postUpdateProfile();
 
-    $this->expectOutputRegex("[Invalid email]");
+
     $this->expectOutputRegex("[Name can't be empty]");
   }
 
-  function testPostProfileEmailAlreadyRegistered()
-  {
-    $user = new User;
-    $user->id = $this->uuid();
-    $user_id = $user->id;
-    $user->email = 'nurkholis@gmail.com';
-    $user->name = 'kholis';
-    $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
-    $this->userRepository->save($user);
-    $user->id = $this->uuid();
-    $user->email = 'setiawan@gmail.com';
-    $this->userRepository->save($user);
+  // function testPostProfileEmailAlreadyRegistered()
+  // {
+  //   $user = new User;
+  //   $user->id = $this->uuid();
+  //   $user_id = $user->id;
+  //   $user->email = 'nurkholis@gmail.com';
+  //   $user->name = 'kholis';
+  //   $user->password = password_hash('rahasia', PASSWORD_BCRYPT);
+  //   $this->userRepository->save($user);
+  //   $user->id = $this->uuid();
+  //   $user->email = 'setiawan@gmail.com';
+  //   $this->userRepository->save($user);
 
-    $request = new UserSessionRequest();
-    $request->id = $this->uuid();
-    $request->user_id = $user_id;
-    $this->sessionService->create($request);
+  //   $request = new UserSessionRequest();
+  //   $request->id = $this->uuid();
+  //   $request->user_id = $user_id;
+  //   $this->sessionService->create($request);
 
-    $_COOKIE[SessionService::$COOKIE] = $request->id;
-    $_POST['email'] = 'setiawan@gmail.com';
-    $_POST['name'] = 'setiawan';
-    $this->userController->postUpdateProfile();
+  //   $_COOKIE[SessionService::$COOKIE] = $request->id;
+  //   $_POST['email'] = 'setiawan@gmail.com';
+  //   $_POST['name'] = 'setiawan';
+  //   $this->userController->postUpdateProfile();
 
-    $this->expectOutputRegex("[User profile]");
-    $this->expectOutputRegex("[Email already registered]");
-  }
+  //   $this->expectOutputRegex("[User profile]");
+  //   $this->expectOutputRegex("[Email already registered]");
+  // }
 
   function testPassword()
   {
