@@ -135,21 +135,38 @@ class UserController
   public function postUpdateProfile()
   {
     try {
-      $request = new UserProfileUpdateRequest;
       $current = $this->sessionService->currentSession();
 
+
+      $request = new UserProfileUpdateRequest;
       $request->id = $current->user_id;
-
-      $request->email = strip_tags($_POST['email']);
       $request->name = strip_tags($_POST['name']);
-
+      $request->email = $current->email;
       $this->userService->updateProfile($request);
 
-      View::redirect('/users/dashboard');
+      View::render('User/profile', [
+        'title' => 'User profile',
+        'user' => [
+          'id' => $current->user_id,
+          'email' => $current->email,
+          'name' => $current->name,
+        ],
+        'swal' => json_encode([
+          'icon' => 'success',
+          'title' => 'Update Profile Success',
+          'timer' => 1000,
+          'redirect-url' => BASE_URL . '/users/dashboard'
+        ])
+      ]);
     } catch (ValidateException $e) {
 
       View::render('User/profile', [
         'title' => 'User profile',
+        'user' => [
+          'id' => $current->user_id,
+          'email' => $current->email,
+          'name' => $current->name,
+        ],
         'error' => unserialize($e->getMessage())
       ]);
     }
@@ -186,7 +203,21 @@ class UserController
 
       $this->userService->updatePassword($request);
 
-      View::redirect('/users/dashboard');
+      View::render('User/password', [
+        'title' => 'User password',
+        'user' => [
+          'id' => $current->user_id,
+          'email' => $current->email,
+          'name' => $current->name,
+        ],
+        'swal' => json_encode([
+          'icon' => 'success',
+          'title' => 'Update Password Success',
+          'timer' => 1000,
+          'redirect-url' => BASE_URL . '/users/dashboard'
+
+        ])
+      ]);
     } catch (ValidateException $e) {
       View::render('User/password', [
         'title' => 'User password',
