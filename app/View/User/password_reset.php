@@ -6,7 +6,7 @@
   <div class="row d-flex align-items-center g-lg-5 py-5 mt-4">
     <div class="col-md-6 col-lg-8 d-flex text-lg-start text-center flex-column">
       <h1 class="display-4 fw-bold lh-1">Reset Password</h1>
-      <p class="fw-light fs-4">
+      <p class="fw-light fs-6">
         Made by <a href="https://www.github.com/nkolis">Kholis</a> with PHP
         Programming Languange :)
       </p>

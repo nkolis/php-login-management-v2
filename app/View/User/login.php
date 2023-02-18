@@ -2,7 +2,7 @@
   <div class="row d-flex align-items-center g-lg-5 py-5 mt-4">
     <div class="col-md-6 col-lg-8 d-flex text-lg-start text-center flex-column">
       <h1 class="display-4 fw-bold lh-1">Login</h1>
-      <p class="fw-light fs-5">
+      <p class="fw-light fs-6">
         Made by <a href="https://www.github.com/nkolis">Kholis</a> with PHP
         Programming Languange :)
       </p>
@@ -38,11 +38,11 @@
         </div>
 
         <div class="text-end mb-3">
-          <a href="<?= BASE_URL ?>/users/password_reset">Lupa password?</a>
+          <a href="<?= BASE_URL ?>/users/password_reset">Forgot password?</a>
         </div>
 
         <button class="btn btn-primary w-100 p-2 mb-2" type="submit">Login</button>
-        <span>Belum punya akun? </span> <a href="<?= BASE_URL ?>/users/register">Register</a>
+        <span>Don't have an account? </span> <a href="<?= BASE_URL ?>/users/register">Register</a>
 
 
 

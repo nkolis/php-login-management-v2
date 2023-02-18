@@ -62,7 +62,7 @@ class UserService
     try {
       Database::beginTransaction();
       $user = $this->userRepository->findById($request->id);
-      $user->email = $request->email;
+
       $user->name = $request->name;
       $this->userRepository->update($user);
       Database::commitTransaction();
@@ -254,17 +254,17 @@ class UserService
     }
 
     // validasi jika email tidak valid
-    if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $request->email)) {
-      $errors['email'] = 'Invalid email';
-    }
+    // if (!preg_match('/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', $request->email)) {
+    //   $errors['email'] = 'Invalid email';
+    // }
 
 
     // validasi jika email sudah terdaftar
-    $user_email = $this->userRepository->findByEmail($request->email);
-    $user = $this->userRepository->findById($request->id);
-    if ($user_email != null && $user->email != $user_email->email) {
-      $errors['email'] = 'Email already registered';
-    }
+    // $user_email = $this->userRepository->findByEmail($request->email);
+    // $user = $this->userRepository->findById($request->id);
+    // if ($user_email != null && $user->email != $user_email->email) {
+    //   $errors['email'] = 'Email already registered';
+    // }
 
     // tangkap error exception
     if (!empty($errors)) {

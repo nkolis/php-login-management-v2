@@ -6,7 +6,7 @@
   <div class="row d-flex align-items-center g-lg-5 py-5 mt-4">
     <div class="col-md-6 col-lg-8 d-flex text-lg-start text-center flex-column">
       <h1 class="display-4 fw-bold lh-1">Register</h1>
-      <p class="fw-light fs-5">
+      <p class="fw-light fs-6">
         Made by <a href="https://www.github.com/nkolis">Kholis</a> with PHP
         Programming Languange :)
       </p>
@@ -38,7 +38,7 @@
         <?php } ?>
       </div>
       <button class="btn btn-primary w-100 p-2 mb-2" type="submit">Register</button>
-      <span>Sudah punya akun? </span> <a href="<?= BASE_URL ?>/users/login">Login</a>
+      <span>Have an account? </span> <a href="<?= BASE_URL ?>/users/login">Login</a>
     </form>
   </div>
 </div>
